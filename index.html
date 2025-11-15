@@ -3,36 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>(Nombre de la empresa) - Sistema de Cotizaciones</title>
+    <title>TechFix Solutions - Sistema de Cotizaciones</title>
     <link rel="stylesheet" href="css/styles.css">
-    <head>
+</head>
 <body>
     <header>
-        <div class="container header-container">
-            <div class="logo">
-                <div class="logo-icon">🔧</div>
-                <div class="logo-text">
-                <h1>(Nombre de la empresa)</h1>
-                <p>Sistema de Cotizaciones</p>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🔧</div>
+                    <div class="logo-text">
+                        <h1>TechFix Solutions</h1>
+                        <p>Sistema de Cotizaciones Profesional</p>
+                    </div>
                 </div>
+                <nav>
+                    <ul>
+                        <li><a href="#home" class="nav-link active" data-target="home">Inicio</a></li>
+                        <li><a href="#services" class="nav-link" data-target="services">Servicios</a></li>
+                        <li><a href="#clients" class="nav-link" data-target="clients">Clientes</a></li>
+                        <li><a href="#quotes" class="nav-link" data-target="quotes">Cotizaciones</a></li>
+                        <li><a href="#reports" class="nav-link" data-target="reports">Reportes</a></li>
+                    </ul>
+                </nav>
             </div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#home">Inicio</a></li>
-                    <li><a href="#about">Acerca de</a></li>
-                    <li><a href="#services">Servicios</a></li>
-                    <li><a href="#contact">Contacto</a></li>
-                </ul>
-            </nav>
         </div>
     </header>
+
     <div class="container">
         <!-- Sección de Inicio -->
         <section id="home" class="section active">
             <div class="hero">
                 <h1>Soluciones Técnicas Profesionales</h1>
                 <p>Ofrecemos servicios de soporte técnico especializado para mantener tus sistemas funcionando de manera óptima.</p>
-                <a href="#" class="btn nav-link" data-target="services">Ver Servicios</a>
+                <a href="#services" class="btn nav-link" data-target="services">Ver Servicios</a>
             </div>
             
             <div class="services-grid">
@@ -42,16 +46,16 @@
                     <p>Limpieza y optimización para mantener tu equipo en óptimas condiciones.</p>
                     <div class="service-price">$35.00</div>
                 </div>
-        <div class="service-card">
-            <div="service-icon">💻</div>
-            <h3>Formateo e Instalación</h3>
-            <p>Instalación limpia de sistema operativo y programas esenciales.</p>
-            <div class="service-price">$50.00</div>
-        </div>
-        <div class="service-card">
-            <div class="service-icon">🦠</div>
-            <h3>Remocion de Malware</h3>
-            <p>Eliminación de virus, spyware y otros programas maliciosos.</p>
+                <div class="service-card">
+                    <div class="service-icon">💻</div>
+                    <h3>Formateo e Instalación</h3>
+                    <p>Instalación limpia de sistema operativo y programas esenciales.</p>
+                    <div class="service-price">$50.00</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🦠</div>
+                    <h3>Remoción de Malware</h3>
+                    <p>Eliminación de virus, spyware y otros programas maliciosos.</p>
                     <div class="service-price">$45.00</div>
                 </div>
                 <div class="service-card">
@@ -62,26 +66,29 @@
                 </div>
             </div>
         </section>
-        <!-- Sección Acerca de  servicios-->
-         <section id="service" class="section">
-            <h2>Gestion de Servicios</h2>
-            <div id="service-notificacion" class="notification"></div>
+
+        <!-- Sección de Gestión de Servicios -->
+        <section id="services" class="section">
+            <h2>Gestión de Servicios</h2>
+            <div id="service-notification" class="notification"></div>
             <button class="btn" id="add-service-btn">Agregar Servicio</button>
-<table id="services-table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripccion</th>
-            <th>Precio Base</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Las filas de servicios se generaran dinamicamente aqui -->
-    </tbody>
-</table>
-<!-- Formulario de Servicio -->
+            
+            <table id="services-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio Base</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de servicios se generarán dinámicamente aquí -->
+                </tbody>
+            </table>
+
+            <!-- Formulario de Servicio -->
             <div id="service-form-container" style="display: none; margin-top: 30px;">
                 <h3 id="service-form-title">Agregar Nuevo Servicio</h3>
                 <form id="service-form">
@@ -107,25 +114,28 @@
                 </form>
             </div>
         </section>
-        <!-- Seccion de Cleintes-->
-         <section id="clients" class="section">
-            <h2>Gestion de Clientes</h2>
-            <div id="client-notificacion" class="notification"></div>
+
+        <!-- Sección de Clientes -->
+        <section id="clients" class="section">
+            <h2>Gestión de Clientes</h2>
+            <div id="client-notification" class="notification"></div>
             <button class="btn" id="add-client-btn">Agregar Cliente</button>
-<table id="clients-table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Correo Electronico</th>
-            <th>Telefono</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Las filas de clientes se generaran dinamicamente aqui -->
-    </tbody>
+            
+            <table id="clients-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo Electrónico</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de clientes se generarán dinámicamente aquí -->
+                </tbody>
             </table>
+
             <!-- Formulario de Cliente -->
             <div id="client-form-container" style="display: none; margin-top: 30px;">
                 <h3 id="client-form-title">Agregar Nuevo Cliente</h3>
@@ -153,29 +163,32 @@
                 </form>
             </div>
         </section>
-        <!-- Sección de Contacto -->
-         <section id="quotes" class="section">
-            <h2>Gestion de Cotizaciones</h2>
-             <div id="quote-notification" class="notification"></div>
+
+        <!-- Sección de Cotizaciones -->
+        <section id="quotes" class="section">
+            <h2>Gestión de Cotizaciones</h2>
+            <div id="quote-notification" class="notification"></div>
             <button class="btn" id="add-quote-btn">Nueva Cotización</button>
-         <table id="quotes-table">
-    <thead>
-        <tr>
-            <th>ID</th>
+            
+            <table id="quotes-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
                         <th>Fecha</th>
                         <th>Cliente</th>
                         <th>Subtotal</th>
                         <th>Impuesto</th>
                         <th>Total</th>
                         <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Las filas de cotizaciones se generaran dinamicamente aqui -->
-    </tbody>
-</table>
-<!--Formulacio de Cotizacion-->
- <div id="quote-form-container" style="display: none; margin-top: 30px;">
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de cotizaciones se generarán dinámicamente aquí -->
+                </tbody>
+            </table>
+
+            <!-- Formulario de Cotización -->
+            <div id="quote-form-container" style="display: none; margin-top: 30px;">
                 <h3 id="quote-form-title">Nueva Cotización</h3>
                 <form id="quote-form">
                     <input type="hidden" id="quote-id">
@@ -227,6 +240,7 @@
                 </form>
             </div>
         </section>
+
         <!-- Sección de Reportes -->
         <section id="reports" class="section">
             <h2>Reportes de Cotizaciones</h2>
@@ -268,10 +282,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Las filas de reportes se generaran dinamicamente aqui -->  
+                    <!-- Las filas de reportes se generarán dinámicamente aquí -->  
                 </tbody>
                 <tfoot>
-                     <tr class="totals-row">
+                    <tr class="totals-row">
                         <td colspan="3"><strong>Totales:</strong></td>
                         <td id="total-subtotal">$0.00</td>
                         <td id="total-tax">$0.00</td>
@@ -281,12 +295,14 @@
             </table>
         </section>
     </div>
+
     <footer>
         <div class="container">
             <p>&copy; 2024 TechFix Solutions - Sistema de Gestión de Cotizaciones</p>
         </div>
     </footer>
-    <!--Scriptos-->
+
+    <!-- Scripts -->
     <script src="js/database.js"></script>
     <script src="js/services.js"></script>
     <script src="js/clients.js"></script>
