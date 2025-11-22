@@ -1,120 +1,238 @@
-<!-- clientes.html -->
+<!-- Referencia del documento del proyecto: /mnt/data/Actividad PROYECTO FINAL v5.pdf -->
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Clientes - Freelance</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gestión de Clientes — Sistema Freelance (Local)</title>
+
 </head>
 <body>
-  <nav class="nav"><a href="index.html">Inicio</a> › <span>Clientes</span></nav>
-  <main class="container">
-    <h2>Gestión de Clientes</h2>
-
-    <form id="formCliente">
-      <input type="hidden" id="IdCliente" />
-      <label>Nombre<span class="req">*</span></label>
-      <input type="text" id="NombreCliente" required />
-      <label>Email<span class="req">*</span></label>
-      <input type="email" id="Email" required />
-      <label>Teléfono</label>
-      <input type="text" id="Telefono" />
-      <div class="actions">
-        <button type="submit" id="btnGuardar" class="btn">Guardar</button>
-        <button type="button" id="btnNuevo" class="btn alt">Nuevo</button>
+  <div class="container">
+    <header class="card" style="margin-bottom:16px;display:flex;align-items:center;gap:14px;">
+      <div>
+        <h1>Gestión de Clientes</h1>
+        <div class="small">Módulo de clientes — datos guardados en LocalStorage (navegador)</div>
       </div>
-    </form>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <div class="badge" id="totalBadge">Clientes: 0</div>
+        <div class="controls">
+          <button id="btnExportJSON" class="btn ghost">Exportar JSON</button>
+          <button id="btnExportCSV" class="btn ghost">Exportar CSV</button>
+          <label class="sr-only" for="fileImport">Importar CSV/JSON</label>
+          <input type="file" id="fileImport" accept=".csv,application/json" style="display:none">
+          <button id="btnImport" class="btn ghost">Importar</button>
+          <button id="btnResetData" class="btn alt">Reset datos</button>
+        </div>
+        <label class="toggle-dark"><input type="checkbox" id="darkMode"> Dark</label>
+      </div>
+    </header>
 
-    <h3>Lista de Clientes</h3>
-    <table id="tblClientes" class="table">
-      <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </main>
-  <script src="app.js"></script>
+    <section class="card" aria-labelledby="form-title">
+      <h2 id="form-title">Registrar / Editar Cliente</h2>
+
+      <form id="formCliente" novalidate>
+        <input type="hidden" id="IdCliente" />
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div style="flex:2">
+            <label for="NombreCliente">Nombre completo <span class="small" aria-hidden>*</span></label>
+            <input id="NombreCliente" type="text" minlength="3" required placeholder="Ej: Juan Pérez" />
+          </div>
+          <div style="flex:1">
+            <label for="FechaRegistro">Fecha de registro</label>
+            <input id="FechaRegistro" type="date" required />
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+          <div style="flex:1">
+            <label for="Email">Correo electrónico</label>
+            <input id="Email" type="email" required placeholder="ejemplo@dominio.com" />
+          </div>
+          <div style="flex:1">
+            <label for="Telefono">Teléfono</label>
+            <input id="Telefono" type="tel" placeholder="6000-0000" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn"> Guardar</button>
+          <button type="button" id="btnClear" class="btn alt">Limpiar</button>
+          <button type="button" id="btnValidate" class="btn ghost">Validar</button>
+        </div>
+      </form>
+
+      <div id="searchArea" style="margin-top:12px">
+        <div class="search-row">
+          <input id="q" placeholder="Buscar por nombre o email..." style="flex:1;padding:10px;border-radius:8px;border:1px solid #e6edf3" />
+          <select id="filterDate" style="width:200px">
+            <option value="">Filtrar por fecha</option>
+            <option value="last30">Últimos 30 días</option>
+            <option value="last90">Últimos 90 días</option>
+          </select>
+          <div class="controls">
+            <button id="btnSortName" class="btn ghost">Ordenar nombre ▲▼</button>
+            <button id="btnSortDate" class="btn ghost">Ordenar fecha ▲▼</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:12px">
+      <table class="table" id="tblClientes" aria-label="Lista de clientes">
+        <thead>
+          <tr>
+            <th data-key="NombreCliente">Nombre</th>
+            <th data-key="Email">Email</th>
+            <th data-key="Telefono">Teléfono</th>
+            <th data-key="FechaRegistro">Fecha registro</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+  </div>
+
+  <div id="toast" class="toast"></div>
+
   <script>
-    //clientes.js 
-    document.addEventListener('DOMContentLoaded',()=>{
-        const form =document.getElementById('formCliente');
-        const tblBody =document.querySelector('#tblClientes tbody');
-        const loadClientes =()=>{
-            fetch('/api/clientes')
-            tblBody.innerHTML='';
-            list.forEach(c =>{
-                fetch('/api/clientes').then(r=> r.json()).then(list=>{
-                    tblBody.innerHTML='';
-                    list.forEach(c =>{
-                        const tr =document.createElement('tr');
-                        tr.innerHTML = `<td>${c.NombreCliente}</td><td>${c.Email}</td><td>${c.Telefono||''}</td>
-            <td>
-              <button data-id="${c.IdCliente}" class="edit">Editar</button>
-              <button data-id="${c.IdCliente}" class="del">Eliminar</button>
-            </td>`;
-            tblBody.appendChild(tr);
-                    });
-            });
-            });
-        };
-        loadClientes();
-        form.addEventListener('submit', e => {
-      e.preventDefault();
-      const id = document.getElementById('IdCliente').value;
-      const payload = new FormData();
-      const nombre = document.getElementById('NombreCliente').value.trim();
-      const email = document.getElementById('Email').value.trim();
-      const tel = document.getElementById('Telefono').value.trim();
+  // Utilities (self-contained) — storage helpers, sanitize, csv/json helpers
+  (function(){
+    window.getAll = function(key){ try{ return JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){ return []; }};
+    window.saveAll = function(key, arr){ localStorage.setItem(key, JSON.stringify(arr)); };
+    window.nextId = function(entity){ const k='__id_'+entity; let v=parseInt(localStorage.getItem(k)||'0',10); v++; localStorage.setItem(k,String(v)); return v; };
+    window.escapeHTML = function(str){ if (str==null) return ''; return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); };
+    window.csvSafe = function(x){ if (x==null) return '""'; const s=String(x).replace(/"/g,'""'); return '"'+s+'"'; };
+    window.downloadBlob = function(content, filename, type='text/csv'){ const blob=new Blob([content],{type}); const link=document.createElement('a'); link.href=URL.createObjectURL(blob); link.download=filename; document.body.appendChild(link); link.click(); link.remove(); };
+    window.showToast = function(text,type='ok'){ const t=document.getElementById('toast'); t.textContent=text; t.className='toast '+(type==='ok'?'ok':'err'); t.style.display='block'; setTimeout(()=>t.style.opacity='1',10); setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.style.display='none',300); },2200); };
+    window.isValidEmail = function(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); };
+    // CSV parse simple (expecting header)
+    window.parseCSV = function(text){ const lines=text.split(/\r?\n/).filter(Boolean); if(lines.length<1) return []; const headers=lines.shift().split(',').map(h=>h.trim().replace(/^"|"$/g,'')); return lines.map(l=>{ const cols=l.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/g).map(c=>c.replace(/^"|"$/g,'')); const obj={}; headers.forEach((h,i)=>obj[h]=cols[i]||''); return obj; }); };
+  })();
 
-      // validaciones
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) { alert('Email inválido'); return; }
+  // App logic
+  (function(){
+    const KEY='clientes';
+    const tblBody=document.querySelector('#tblClientes tbody');
+    const form=document.getElementById('formCliente');
+    const qInput=document.getElementById('q');
+    const filterDate=document.getElementById('filterDate');
+    const totalBadge=document.getElementById('totalBadge');
+    let sortNameAsc=null; let sortDateAsc=null;
 
-      if (!nombre) { alert('Nombre requerido'); return; }
+    // Init demo data if empty (only first time)
+    if(getAll(KEY).length===0){ const demo=[
+      { IdCliente: nextId(KEY), NombreCliente:'ACME, S.A.', Email:'acme@ejemplo.com', Telefono:'6000-0000', FechaRegistro: new Date().toISOString().slice(0,10) },
+      { IdCliente: nextId(KEY), NombreCliente:'Juan Pérez', Email:'jperez@correo.com', Telefono:'61234567', FechaRegistro: new Date().toISOString().slice(0,10) }
+    ]; saveAll(KEY,demo); }
 
-      if (id) {
-        payload.append('action','update');
-        payload.append('IdCliente', id);
-        payload.append('NombreCliente', nombre);
-        payload.append('Email', email);
-        payload.append('Telefono', tel);
-      } else {
-        payload.append('action','create');
-        payload.append('NombreCliente', nombre);
-        payload.append('Email', email);
-        payload.append('Telefono', tel);
+    // DOM refs
+    const NombreCliente=document.getElementById('NombreCliente');
+    const Email=document.getElementById('Email');
+    const Telefono=document.getElementById('Telefono');
+    const FechaRegistro=document.getElementById('FechaRegistro');
+
+    FechaRegistro.value=new Date().toISOString().slice(0,10);
+
+    function updateBadge(){ totalBadge.textContent='Clientes: '+getAll(KEY).length; }
+
+    function render(list){ tblBody.innerHTML=''; if(!Array.isArray(list)) list=[]; list.forEach(c=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${escapeHTML(c.NombreCliente)}</td>
+                    <td>${escapeHTML(c.Email)}</td>
+                    <td>${escapeHTML(c.Telefono||'')}</td>
+                    <td>${escapeHTML(c.FechaRegistro)}</td>
+                    <td>
+                      <button class="edit btn ghost" data-id="${c.IdCliente}">Editar</button>
+                      <button class="del btn" data-id="${c.IdCliente}">Eliminar</button>
+                    </td>`;
+      tblBody.appendChild(tr);
+    }); updateBadge(); }
+
+    function loadAndRender(){ let list=getAll(KEY); // default sort by date desc
+      list.sort((a,b)=>b.FechaRegistro.localeCompare(a.FechaRegistro)); render(list); }
+
+    loadAndRender();
+
+    // Search + filters
+    function applyFilters(){ let list=getAll(KEY);
+      const q=qInput.value.trim().toLowerCase(); if(q) list=list.filter(c=> (c.NombreCliente||'').toLowerCase().includes(q) || (c.Email||'').toLowerCase().includes(q));
+      const fd=filterDate.value; if(fd==='last30'){ const d=new Date(); d.setDate(d.getDate()-30); list=list.filter(c=> new Date(c.FechaRegistro)>=d);} if(fd==='last90'){ const d=new Date(); d.setDate(d.getDate()-90); list=list.filter(c=> new Date(c.FechaRegistro)>=d);} 
+      // sorting
+      if(sortNameAsc!==null){ list.sort((a,b)=> sortNameAsc ? a.NombreCliente.localeCompare(b.NombreCliente) : b.NombreCliente.localeCompare(a.NombreCliente)); }
+      if(sortDateAsc!==null){ list.sort((a,b)=> sortDateAsc ? a.FechaRegistro.localeCompare(b.FechaRegistro) : b.FechaRegistro.localeCompare(a.FechaRegistro)); }
+      render(list);
+    }
+
+    qInput.addEventListener('input', ()=>applyFilters());
+    filterDate.addEventListener('change', ()=>applyFilters());
+
+    // Sorting buttons
+    document.getElementById('btnSortName').addEventListener('click', ()=>{ sortNameAsc = sortNameAsc === null ? true : !sortNameAsc; sortDateAsc=null; applyFilters(); showToast('Orden por nombre '+(sortNameAsc?'ASC':'DESC')); });
+    document.getElementById('btnSortDate').addEventListener('click', ()=>{ sortDateAsc = sortDateAsc === null ? false : !sortDateAsc; sortNameAsc=null; applyFilters(); showToast('Orden por fecha '+(sortDateAsc?'ASC':'DESC')); });
+
+    // Form submit — create/update with duplicate email prevention
+    form.addEventListener('submit', (e)=>{ e.preventDefault(); const id=document.getElementById('IdCliente').value; const nombre=NombreCliente.value.trim(); const email=Email.value.trim().toLowerCase(); const telefono=Telefono.value.trim(); const fecha=FechaRegistro.value;
+
+      if(nombre.length<3){ showToast('El nombre debe tener al menos 3 caracteres','err'); return; }
+      if(!isValidEmail(email)){ showToast('Email inválido','err'); return; }
+
+      const list=getAll(KEY);
+      if(!id){ // create
+        if(list.some(x=> x.Email && x.Email.toLowerCase()===email)){ showToast('Ya existe un cliente con ese email','err'); return; }
+        const nuevo={ IdCliente: nextId(KEY), NombreCliente:nombre, Email:email, Telefono:telefono, FechaRegistro:fecha };
+        list.push(nuevo); saveAll(KEY,list); showToast('Cliente creado','ok');
+      } else { // update
+        const idx=list.findIndex(x=> String(x.IdCliente)===String(id)); if(idx===-1){ showToast('Cliente no encontrado','err'); return; }
+        // if email changed, ensure no duplicate
+        if(list.some((x,i)=> i!==idx && x.Email && x.Email.toLowerCase()===email)){ showToast('Otro cliente ya usa ese email','err'); return; }
+        list[idx].NombreCliente=nombre; list[idx].Email=email; list[idx].Telefono=telefono; list[idx].FechaRegistro=fecha; saveAll(KEY,list); showToast('Cliente actualizado','ok');
       }
-fetch('api/clientes.php', { method:'POST', body: payload })
-        .then(r => r.json())
-        .then(res => { if (res.success) { alert('Guardado'); form.reset(); loadClients(); } else alert(res.error || 'Error'); })
-        .catch(err => alert('Error en servidor'));
+      // reset
+      form.reset(); FechaRegistro.value=new Date().toISOString().slice(0,10); NombreCliente.focus(); loadAndRender();
     });
 
-    document.getElementById('btnNuevo').addEventListener('click', () => form.reset());
-
-    tblBody.addEventListener('click', (e) => {
-      if (e.target.classList.contains('edit')) {
-        const id = e.target.dataset.id;
-        fetch('api/clientes.php').then(r=>r.json()).then(list=>{
-          const c = list.find(x => x.IdCliente == id);
-          if (c) {
-            document.getElementById('IdCliente').value = c.IdCliente;
-            document.getElementById('NombreCliente').value = c.NombreCliente;
-            document.getElementById('Email').value = c.Email;
-            document.getElementById('Telefono').value = c.Telefono;
-            window.scrollTo(0,0);
-          }
-        });
-      }
-      if (e.target.classList.contains('del')) {
-        if (!confirm('Eliminar cliente?')) return;
-        const id = e.target.dataset.id;
-        const fd = new FormData();
-        fd.append('action','delete');
-        fd.append('IdCliente', id);
-        fetch('api/clientes.php', { method:'POST', body: fd })
-          .then(r => r.json()).then(res => { if (res.success) loadClients(); else alert(res.error); });
-      }
+    // Delegated actions edit/delete
+    tblBody.addEventListener('click', (e)=>{
+      const id=e.target.dataset.id; if(!id) return;
+      if(e.target.classList.contains('edit')){
+        const c=getAll(KEY).find(x=> String(x.IdCliente)===String(id)); if(!c) return; document.getElementById('IdCliente').value=c.IdCliente; NombreCliente.value=c.NombreCliente; Email.value=c.Email; Telefono.value=c.Telefono; FechaRegistro.value=c.FechaRegistro; NomeToTop(); }
+      if(e.target.classList.contains('del')){
+        if(!confirm('Confirmar eliminación')) return; let list=getAll(KEY); list=list.filter(x=> String(x.IdCliente)!==String(id)); saveAll(KEY,list); showToast('Cliente eliminado','ok'); loadAndRender(); }
     });
-  });
+
+    function NomeToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+
+    // Export / Import
+    document.getElementById('btnExportCSV').addEventListener('click', ()=>{
+      const data=getAll(KEY); let csv='Nombre,Email,Telefono,FechaRegistro\n'; data.forEach(r=> csv+=`${csvSafe(r.NombreCliente)},${csvSafe(r.Email)},${csvSafe(r.Telefono)},${csvSafe(r.FechaRegistro)}\n`); downloadBlob(csv,'clientes.csv'); showToast('CSV descargado','ok'); });
+
+    document.getElementById('btnExportJSON').addEventListener('click', ()=>{ const data=getAll(KEY); downloadBlob(JSON.stringify(data,null,2),'clientes.json','application/json'); showToast('JSON descargado','ok'); });
+
+    document.getElementById('btnImport').addEventListener('click', ()=> document.getElementById('fileImport').click());
+    document.getElementById('fileImport').addEventListener('change', (ev)=>{
+      const f=ev.target.files[0]; if(!f) return; const reader=new FileReader(); reader.onload=e=>{
+        const txt=e.target.result; const name=f.name.toLowerCase(); try{
+          if(name.endsWith('.json')){ const obj=JSON.parse(txt); if(Array.isArray(obj)){ // merge avoiding duplicates by email
+            let current=getAll(KEY); obj.forEach(it=>{ if(!it.Email) return; if(!current.some(c=> c.Email && c.Email.toLowerCase()===it.Email.toLowerCase())){ it.IdCliente = nextId(KEY); current.push(it); } }); saveAll(KEY,current); showToast('JSON importado','ok'); loadAndRender(); }
+          } else if(name.endsWith('.csv')){ const parsed=parseCSV(txt); let current=getAll(KEY); parsed.forEach(row=>{ const email=row.Email?row.Email.toLowerCase():''; if(!email) return; if(!current.some(c=> c.Email && c.Email.toLowerCase()===email)){ current.push({ IdCliente: nextId(KEY), NombreCliente: row.Nombre||row.Name||row.NombreCliente||'', Email: email, Telefono: row.Telefono||'', FechaRegistro: row.FechaRegistro||new Date().toISOString().slice(0,10) }); } }); saveAll(KEY,current); showToast('CSV importado','ok'); loadAndRender(); } else { showToast('Formato no soportado','err'); }
+        } catch(err){ showToast('Error al importar','err'); }
+      }; reader.readAsText(f);
+    });
+
+    // Reset data
+    document.getElementById('btnResetData').addEventListener('click', ()=>{ if(!confirm('Eliminar TODOS los clientes?')) return; localStorage.removeItem(KEY); localStorage.removeItem('__id_'+KEY); loadAndRender(); showToast('Datos eliminados','ok'); });
+
+    // Validate button (demo)
+    document.getElementById('btnValidate').addEventListener('click', ()=>{ const list=getAll(KEY); const dup=list.map(x=>x.Email&&x.Email.toLowerCase()).filter(Boolean); const dups=dup.filter((v,i,a)=> a.indexOf(v)!==i); if(dups.length) showToast('Emails duplicados detectados: '+Array.from(new Set(dups)).join(', '),'err'); else showToast('No hay duplicados detectados','ok'); });
+
+    // Dark mode
+    const darkToggle=document.getElementById('darkMode'); function applyDark(v){ if(v){ document.documentElement.style.setProperty('--bg','#071024'); document.body.classList.add('dark'); localStorage.setItem('__dark','1'); } else { document.documentElement.style.removeProperty('--bg'); document.body.classList.remove('dark'); localStorage.removeItem('__dark'); }} if(localStorage.getItem('__dark')){ darkToggle.checked=true; applyDark(true); } darkToggle.addEventListener('change',(e)=> applyDark(e.target.checked));
+
+  })();
   </script>
 </body>
 </html>
