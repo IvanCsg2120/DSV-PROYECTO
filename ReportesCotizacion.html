@@ -1,0 +1,181 @@
+<!-- Referencia de requisitos: /mnt/data/Actividad PROYECTO FINAL v5.pdf -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reportes de Cotizaciones — Sistema Freelance</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header style="margin-bottom:12px">
+      <h1>Reportes de Cotizaciones</h1>
+      <p class="small">Listado, filtros, totales y exportación. (Requisito: filtro por cliente y por rango de fechas, totales y CSV)</p>
+    </header>
+
+    <section class="card">
+      <div class="controls" role="region" aria-label="Controles de filtrado">
+        <label class="small">Cliente
+          <select id="filterCliente"><option value="0">-- Todos los clientes --</option></select>
+        </label>
+
+        <label class="small">Desde <input type="date" id="filterDesde" /></label>
+        <label class="small">Hasta <input type="date" id="filterHasta" /></label>
+
+        <input id="q" placeholder="Buscar por Nº cotización o texto" style="flex:1" />
+
+        <button id="btnFiltrar" class="btn">Filtrar</button>
+        <button id="btnReset" class="btn alt">Limpiar</button>
+        <button id="btnExportCSV" class="btn">Exportar CSV</button>
+      </div>
+
+      <div class="summary" aria-live="polite">
+        <div class="box">Subtotal: $<strong id="totSubtotal">0.00</strong></div>
+        <div class="box">Impuesto: $<strong id="totImpuesto">0.00</strong></div>
+        <div class="box">Total: $<strong id="totTotal">0.00</strong></div>
+        <div style="margin-left:auto" class="small">Resultados: <strong id="countResults">0</strong></div>
+      </div>
+
+      <table class="table" id="tblCotizaciones" aria-label="Listado de cotizaciones">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Nº Cotización</th>
+            <th>Cliente</th>
+            <th>Subtotal</th>
+            <th>Impuesto</th>
+            <th>Total</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div style="margin-top:12px;display:flex;gap:8px;align-items:center;justify-content:flex-end">
+        <button id="prevPage" class="btn alt">◀ Prev</button>
+        <div class="small">Página <span id="pageNum">1</span></div>
+        <button id="nextPage" class="btn alt">Next ▶</button>
+      </div>
+
+    </section>
+  </div>
+
+  <script>
+  // Utilities from app.js style (self-contained)
+  function getAll(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){return[];} }
+  function csvSafe(x){ if(x==null) return '""'; const s=String(x).replace(/"/g,'""'); return '"'+s+'"'; }
+  function downloadBlob(content, filename, type='text/csv'){ const blob=new Blob([content],{type}); const link=document.createElement('a'); link.href=URL.createObjectURL(blob); link.download=filename; document.body.appendChild(link); link.click(); link.remove(); }
+  function escapeHTML(str){ if (str==null) return ''; return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+
+  (function(){
+    // Config
+    const PAGE_SIZE = 8;
+    let page = 1;
+
+    // DOM
+    const filterCliente = document.getElementById('filterCliente');
+    const filterDesde = document.getElementById('filterDesde');
+    const filterHasta = document.getElementById('filterHasta');
+    const btnFiltrar = document.getElementById('btnFiltrar');
+    const btnReset = document.getElementById('btnReset');
+    const btnExportCSV = document.getElementById('btnExportCSV');
+    const qInput = document.getElementById('q');
+    const tbody = document.querySelector('#tblCotizaciones tbody');
+    const totSubtotal = document.getElementById('totSubtotal');
+    const totImpuesto = document.getElementById('totImpuesto');
+    const totTotal = document.getElementById('totTotal');
+    const countResults = document.getElementById('countResults');
+    const prevPage = document.getElementById('prevPage');
+    const nextPage = document.getElementById('nextPage');
+    const pageNum = document.getElementById('pageNum');
+
+    // Load clients into filter
+    function loadClientsIntoFilter(){ const clients = getAll('clientes'); filterCliente.innerHTML = '<option value="0">-- Todos los clientes --</option>'; clients.forEach(c=>{ const opt=document.createElement('option'); opt.value=c.IdCliente; opt.textContent=c.NombreCliente; filterCliente.appendChild(opt); }); }
+
+    // Load cotizaciones from localStorage (structure assumed from earlier implementation)
+    function loadCotizaciones(){ const list = getAll('cotizaciones'); // ensure Items field exists
+      return list.map(c => ({ ...c, SubTotal: Number(c.SubTotal||0), Impuesto: Number(c.Impuesto||0), Total: Number(c.Total||0) })); }
+
+    function applyFiltersAndRender(){ let list = loadCotizaciones(); const cliente = Number(filterCliente.value||0); const desde = filterDesde.value; const hasta = filterHasta.value; const q = qInput.value.trim().toLowerCase();
+
+      if(cliente>0) list = list.filter(c => Number(c.IdCliente) === cliente);
+      if(desde) list = list.filter(c => (c.FechaCotizacion||c.Fecha||'') >= desde);
+      if(hasta) list = list.filter(c => (c.FechaCotizacion||c.Fecha||'') <= hasta);
+      if(q) list = list.filter(c => (String(c.IdCotizacion||'') + ' ' + (c.NombreCliente||'') + ' ' + (c.Items && c.Items.map(i=>i.NombreServicio).join(' ')||'')).toLowerCase().includes(q));
+
+      // compute totals
+      const totals = list.reduce((acc,c)=>{ acc.sub += Number(c.SubTotal); acc.tax += Number(c.Impuesto); acc.tot += Number(c.Total); return acc; }, {sub:0,tax:0,tot:0});
+      totSubtotal.textContent = totals.sub.toFixed(2);
+      totImpuesto.textContent = totals.tax.toFixed(2);
+      totTotal.textContent = totals.tot.toFixed(2);
+
+      // pagination
+      const totalItems = list.length; const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE)); if(page>totalPages) page = totalPages; const start=(page-1)*PAGE_SIZE; const pageData = list.slice(start, start+PAGE_SIZE);
+      renderTable(pageData);
+      countResults.textContent = totalItems;
+      pageNum.textContent = `${page} / ${totalPages}`;
+      prevPage.disabled = page<=1; nextPage.disabled = page>=totalPages;
+    }
+
+    function renderTable(data){ tbody.innerHTML = ''; const clients = getAll('clientes'); data.forEach(c => {
+      const clientObj = clients.find(x => Number(x.IdCliente) === Number(c.IdCliente));
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${escapeHTML(c.FechaCotizacion||c.Fecha||'')}</td>
+                      <td>COT-${String(c.IdCotizacion||c.Id).padStart(4,'0')}</td>
+                      <td>${escapeHTML(clientObj?clientObj.NombreCliente:'--')}</td>
+                      <td>${Number(c.SubTotal).toFixed(2)}</td>
+                      <td>${Number(c.Impuesto).toFixed(2)}</td>
+                      <td>${Number(c.Total).toFixed(2)}</td>
+                      <td>
+                        <button class="btn alt" data-id="${c.IdCotizacion||c.Id}" data-action="view">Ver</button>
+                        <button class="btn" data-id="${c.IdCotizacion||c.Id}" data-action="export">Exportar</button>
+                      </td>`;
+      tbody.appendChild(tr);
+    }); }
+
+    // actions
+    btnFiltrar.addEventListener('click', ()=>{ page=1; applyFiltersAndRender(); });
+    btnReset.addEventListener('click', ()=>{ filterCliente.value='0'; filterDesde.value=''; filterHasta.value=''; qInput.value=''; page=1; applyFiltersAndRender(); });
+    prevPage.addEventListener('click', ()=>{ if(page>1){ page--; applyFiltersAndRender(); }});
+    nextPage.addEventListener('click', ()=>{ page++; applyFiltersAndRender(); });
+
+    // export current visible rows to CSV
+    btnExportCSV.addEventListener('click', ()=>{
+      // take currently filtered full list (not only page)
+      let list = loadCotizaciones(); const cliente = Number(filterCliente.value||0); const desde = filterDesde.value; const hasta = filterHasta.value; const q = qInput.value.trim().toLowerCase();
+      if(cliente>0) list = list.filter(c => Number(c.IdCliente) === cliente);
+      if(desde) list = list.filter(c => (c.FechaCotizacion||c.Fecha||'') >= desde);
+      if(hasta) list = list.filter(c => (c.FechaCotizacion||c.Fecha||'') <= hasta);
+      if(q) list = list.filter(c => (String(c.IdCotizacion||'') + ' ' + (c.NombreCliente||'') + ' ' + (c.Items && c.Items.map(i=>i.NombreServicio).join(' ')||'')).toLowerCase().includes(q));
+
+      let csv = 'Fecha,NoCotizacion,Cliente,Subtotal,Impuesto,Total\n'; const clients=getAll('clientes');
+      list.forEach(c=>{ const clientObj = clients.find(x=> Number(x.IdCliente)===Number(c.IdCliente)); csv+= `${csvSafe(c.FechaCotizacion||c.Fecha||'')},COT-${String(c.IdCotizacion||c.Id).padStart(4,'0')},${csvSafe(clientObj?clientObj.NombreCliente:'')},${csvSafe(Number(c.SubTotal).toFixed(2))},${csvSafe(Number(c.Impuesto).toFixed(2))},${csvSafe(Number(c.Total).toFixed(2))}\n`; });
+      downloadBlob(csv,'cotizaciones_export.csv');
+    });
+
+    // delegated actions: view (show items) and export single
+    document.getElementById('tblCotizaciones').addEventListener('click', (e)=>{
+      const btn = e.target.closest('button'); if(!btn) return; const id = btn.dataset.id; const action = btn.dataset.action; if(!id) return;
+      const list = loadCotizaciones(); const cot = list.find(c => String(c.IdCotizacion||c.Id)===String(id)); if(!cot) return alert('No encontrada');
+      if(action==='view'){
+        // show modal-like detail using window.open with text (simple)
+        let txt = `Cotización COT-${String(cot.IdCotizacion||cot.Id).padStart(4,'0')}\nFecha: ${cot.FechaCotizacion||cot.Fecha||''}\nCliente ID: ${cot.IdCliente}\n\nÍtems:\n`;
+        if(Array.isArray(cot.Items)) cot.Items.forEach(it=> txt += ` - ${it.NombreServicio || 'Servicio'}: ${it.Cantidad} x ${Number(it.PrecioUnitario||0).toFixed(2)} = ${Number(it.TotalItem||0).toFixed(2)}\n`);
+        txt += `\nSubtotal: ${Number(cot.SubTotal).toFixed(2)}\nImpuesto: ${Number(cot.Impuesto).toFixed(2)}\nTotal: ${Number(cot.Total).toFixed(2)}`;
+        const w = window.open('', '_blank', 'width=600,height=600'); w.document.write(`<pre>${escapeHTML(txt)}</pre>`);
+      }
+      if(action==='export'){
+        // export single cotizacion as CSV with items
+        let csv='Servicio,Cantidad,PrecioUnitario,TotalItem\n'; if(Array.isArray(cot.Items)) cot.Items.forEach(it=> csv += `${csvSafe(it.NombreServicio||'')},${csvSafe(it.Cantidad)},${csvSafe(Number(it.PrecioUnitario||0).toFixed(2))},${csvSafe(Number(it.TotalItem||0).toFixed(2))}\n`);
+        downloadBlob(csv, `cotizacion_${String(cot.IdCotizacion||cot.Id).padStart(4,'0')}.csv`);
+      }
+    });
+
+    // initial load
+    loadClientsIntoFilter(); applyFiltersAndRender();
+
+  })();
+  </script>
+</body>
+</html>
