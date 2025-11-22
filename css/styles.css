@@ -1,313 +1,772 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechFix Solutions - Sistema de Cotizaciones</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <div class="logo-icon">🔧</div>
-                    <div class="logo-text">
-                        <h1>TechFix Solutions</h1>
-                        <p>Sistema de Cotizaciones Profesional</p>
-                    </div>
-                </div>
-                <nav>
-                    <ul>
-                        <li><a href="#home" class="nav-link active" data-target="home">Inicio</a></li>
-                        <li><a href="#services" class="nav-link" data-target="services">Servicios</a></li>
-                        <li><a href="#clients" class="nav-link" data-target="clients">Clientes</a></li>
-                        <li><a href="#quotes" class="nav-link" data-target="quotes">Cotizaciones</a></li>
-                        <li><a href="#reports" class="nav-link" data-target="reports">Reportes</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
+:root {
+    /* Paleta de colores profesional */
+    --primary: #1a365d;
+    --primary-light: #2d4a7c;
+    --primary-dark: #0f2847;
+    --secondary: #0ea5e9;
+    --secondary-light: #38bdf8;
+    --accent: #f59e0b;
+    --accent-dark: #d97706;
+    
+    /* Colores de estado */
+    --success: #10b981;
+    --success-light: #d1fae5;
+    --warning: #f59e0b;
+    --warning-light: #fef3c7;
+    --danger: #ef4444;
+    --danger-light: #fee2e2;
+    --info: #3b82f6;
+    --info-light: #dbeafe;
+    
+    /* Colores neutros */
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    
+    --white: #ffffff;
+    --black: #000000;
+    
+    /* Sombras profesionales */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    
+    /* Bordes */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+    
+    /* Transiciones */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    <div class="container">
-        <!-- Sección de Inicio -->
-        <section id="home" class="section active">
-            <div class="hero">
-                <h1>Soluciones Técnicas Profesionales</h1>
-                <p>Ofrecemos servicios de soporte técnico especializado para mantener tus sistemas funcionando de manera óptima.</p>
-                <a href="#services" class="btn nav-link" data-target="services">Ver Servicios</a>
-            </div>
-            
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">🛡️</div>
-                    <h3>Mantenimiento Preventivo PC</h3>
-                    <p>Limpieza y optimización para mantener tu equipo en óptimas condiciones.</p>
-                    <div class="service-price">$35.00</div>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">💻</div>
-                    <h3>Formateo e Instalación</h3>
-                    <p>Instalación limpia de sistema operativo y programas esenciales.</p>
-                    <div class="service-price">$50.00</div>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🦠</div>
-                    <h3>Remoción de Malware</h3>
-                    <p>Eliminación de virus, spyware y otros programas maliciosos.</p>
-                    <div class="service-price">$45.00</div>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">📞</div>
-                    <h3>Soporte Remoto</h3>
-                    <p>Asistencia técnica a distancia por hora para resolver problemas rápidamente.</p>
-                    <div class="service-price">$20.00/hora</div>
-                </div>
-            </div>
-        </section>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        <!-- Sección de Gestión de Servicios -->
-        <section id="services" class="section">
-            <h2>Gestión de Servicios</h2>
-            <div id="service-notification" class="notification"></div>
-            <button class="btn" id="add-service-btn">Agregar Servicio</button>
-            
-            <table id="services-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Precio Base</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Las filas de servicios se generarán dinámicamente aquí -->
-                </tbody>
-            </table>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 
+                 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--gray-50);
+    color: var(--gray-900);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 
-            <!-- Formulario de Servicio -->
-            <div id="service-form-container" style="display: none; margin-top: 30px;">
-                <h3 id="service-form-title">Agregar Nuevo Servicio</h3>
-                <form id="service-form">
-                    <input type="hidden" id="service-id">
-                    <div class="form-group">
-                        <label for="service-name">Nombre del Servicio:</label>
-                        <input type="text" id="service-name" required>
-                        <div class="error" id="service-name-error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="service-description">Descripción:</label>
-                        <textarea id="service-description" rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="service-price">Precio Base ($):</label>
-                        <input type="number" id="service-price" step="0.01" min="0" required>
-                        <div class="error" id="service-price-error"></div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn">Guardar Servicio</button>
-                        <button type="button" class="btn btn-secondary" id="cancel-service-btn">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        </section>
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
 
-        <!-- Sección de Clientes -->
-        <section id="clients" class="section">
-            <h2>Gestión de Clientes</h2>
-            <div id="client-notification" class="notification"></div>
-            <button class="btn" id="add-client-btn">Agregar Cliente</button>
-            
-            <table id="clients-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Correo Electrónico</th>
-                        <th>Teléfono</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Las filas de clientes se generarán dinámicamente aquí -->
-                </tbody>
-            </table>
+/* ============================================
+   HEADER - Más profesional y limpio
+   ============================================ */
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--white);
+    padding: 0;
+    box-shadow: var(--shadow-lg);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
 
-            <!-- Formulario de Cliente -->
-            <div id="client-form-container" style="display: none; margin-top: 30px;">
-                <h3 id="client-form-title">Agregar Nuevo Cliente</h3>
-                <form id="client-form">
-                    <input type="hidden" id="client-id">
-                    <div class="form-group">
-                        <label for="client-name">Nombre del Cliente:</label>
-                        <input type="text" id="client-name" required>
-                        <div class="error" id="client-name-error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="client-email">Email:</label>
-                        <input type="email" id="client-email" required>
-                        <div class="error" id="client-email-error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="client-phone">Teléfono:</label>
-                        <input type="tel" id="client-phone" required>
-                        <div class="error" id="client-phone-error"></div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn">Guardar Cliente</button>
-                        <button type="button" class="btn btn-secondary" id="cancel-client-btn">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        </section>
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    gap: 40px;
+}
 
-        <!-- Sección de Cotizaciones -->
-        <section id="quotes" class="section">
-            <h2>Gestión de Cotizaciones</h2>
-            <div id="quote-notification" class="notification"></div>
-            <button class="btn" id="add-quote-btn">Nueva Cotización</button>
-            
-            <table id="quotes-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Fecha</th>
-                        <th>Cliente</th>
-                        <th>Subtotal</th>
-                        <th>Impuesto</th>
-                        <th>Total</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Las filas de cotizaciones se generarán dinámicamente aquí -->
-                </tbody>
-            </table>
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform var(--transition-base);
+}
 
-            <!-- Formulario de Cotización -->
-            <div id="quote-form-container" style="display: none; margin-top: 30px;">
-                <h3 id="quote-form-title">Nueva Cotización</h3>
-                <form id="quote-form">
-                    <input type="hidden" id="quote-id">
-                    
-                    <div class="form-group">
-                        <label for="quote-client">Cliente:</label>
-                        <select id="quote-client" required>
-                            <option value="">Seleccionar cliente</option>
-                        </select>
-                        <div class="error" id="quote-client-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="quote-date">Fecha:</label>
-                        <input type="date" id="quote-date" required>
-                    </div>
-                    
-                    <div class="quote-items">
-                        <h4>Ítems de la Cotización</h4>
-                        <div id="quote-items-list">
-                            <!-- Los ítems se agregarán dinámicamente -->
-                        </div>
-                        <button type="button" class="btn btn-secondary" id="add-item-btn">Agregar Ítem</button>
-                    </div>
-                    
-                    <div class="quote-summary">
-                        <div class="summary-row">
-                            <span>Subtotal:</span>
-                            <span id="quote-subtotal">$0.00</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="quote-tax">Impuesto (%):</label>
-                            <input type="number" id="quote-tax" value="8" min="0" max="100" step="0.1">
-                        </div>
-                        <div class="summary-row">
-                            <span>Impuesto:</span>
-                            <span id="quote-tax-amount">$0.00</span>
-                        </div>
-                        <div class="summary-row total">
-                            <span>Total:</span>
-                            <span id="quote-total">$0.00</span>
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn">Guardar Cotización</button>
-                        <button type="button" class="btn btn-secondary" id="cancel-quote-btn">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        </section>
+.logo:hover {
+    transform: scale(1.02);
+}
 
-        <!-- Sección de Reportes -->
-        <section id="reports" class="section">
-            <h2>Reportes de Cotizaciones</h2>
-            
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="filter-client">Filtrar por Cliente:</label>
-                    <select id="filter-client">
-                        <option value="">Todos los clientes</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="filter-date-from">Desde:</label>
-                    <input type="date" id="filter-date-from">
-                </div>
-                
-                <div class="filter-group">
-                    <label for="filter-date-to">Hasta:</label>
-                    <input type="date" id="filter-date-to">
-                </div>
-                
-                <div class="filter-group">
-                    <label>&nbsp;</label>
-                    <button class="btn" id="apply-filters">Aplicar Filtros</button>
-                    <button class="btn btn-secondary" id="export-csv">Exportar a CSV</button>
-                </div>
-            </div>
-            
-            <table id="reports-table">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Nº Cotización</th>
-                        <th>Cliente</th>
-                        <th>Subtotal</th>
-                        <th>Impuesto</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Las filas de reportes se generarán dinámicamente aquí -->  
-                </tbody>
-                <tfoot>
-                    <tr class="totals-row">
-                        <td colspan="3"><strong>Totales:</strong></td>
-                        <td id="total-subtotal">$0.00</td>
-                        <td id="total-tax">$0.00</td>
-                        <td id="total-amount">$0.00</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </section>
-    </div>
+.logo-icon {
+    font-size: 2.5rem;
+    color: var(--secondary-light);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 TechFix Solutions - Sistema de Gestión de Cotizaciones</p>
-        </div>
-    </footer>
+.logo-text h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 4px;
+}
 
-    <!-- Scripts -->
-    <script src="js/database.js"></script>
-    <script src="js/services.js"></script>
-    <script src="js/clients.js"></script>
-    <script src="js/quotes.js"></script>
-    <script src="js/reports.js"></script>
-    <script src="js/app.js"></script>
-</body>
-</html>
+.logo-text p {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    font-weight: 400;
+    letter-spacing: 0.025em;
+}
+
+/* Navegación mejorada */
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 8px;
+    align-items: center;
+}
+
+nav a {
+    color: var(--white);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+    font-weight: 500;
+    font-size: 0.95rem;
+    position: relative;
+    overflow: hidden;
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(-100%);
+    transition: transform var(--transition-base);
+}
+
+nav a:hover::before {
+    transform: translateX(0);
+}
+
+nav a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+nav a.active {
+    background-color: var(--secondary);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+}
+
+/* ============================================
+   SECCIONES - Cards más profesionales
+   ============================================ */
+.section {
+    display: none;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-top: 32px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+    animation: fadeIn var(--transition-base);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section.active {
+    display: block;
+}
+
+h2 {
+    color: var(--primary);
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--secondary);
+    font-size: 1.875rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: var(--radius-full);
+}
+
+/* ============================================
+   HERO SECTION - Más impactante
+   ============================================ */
+.hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: var(--white);
+    padding: 80px 32px;
+    text-align: center;
+    border-radius: var(--radius-xl);
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-2xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    position: relative;
+    z-index: 1;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    max-width: 700px;
+    margin: 0 auto 32px;
+    opacity: 0.95;
+    line-height: 1.8;
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   BOTONES - Sistema profesional
+   ============================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: var(--accent);
+    color: var(--white);
+    padding: 12px 28px;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all var(--transition-base);
+    text-decoration: none;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width var(--transition-slow), height var(--transition-slow);
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:hover {
+    background-color: var(--accent-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+}
+
+.btn-secondary:hover {
+    background-color: #0284c7;
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+}
+
+.btn-edit {
+    background-color: var(--warning);
+}
+
+.btn-edit:hover {
+    background-color: var(--accent-dark);
+}
+
+.btn-delete {
+    background-color: var(--danger);
+}
+
+.btn-delete:hover {
+    background-color: #dc2626;
+}
+
+/* ============================================
+   SERVICIOS - Grid moderno
+   ============================================ */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.service-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-md);
+    border: 2px solid var(--gray-100);
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary), var(--accent));
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+}
+
+.service-card:hover::before {
+    transform: scaleX(1);
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--secondary);
+}
+
+.service-icon {
+    font-size: 3rem;
+    color: var(--secondary);
+    margin-bottom: 20px;
+    display: inline-block;
+    transition: transform var(--transition-base);
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.service-card h3 {
+    margin-bottom: 12px;
+    color: var(--primary);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.service-price {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin: 16px 0;
+    letter-spacing: -0.025em;
+}
+
+/* ============================================
+   FORMULARIOS - Diseño moderno
+   ============================================ */
+form {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--gray-700);
+    font-size: 0.95rem;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: all var(--transition-base);
+    background-color: var(--white);
+    color: var(--gray-900);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+    background-color: var(--white);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.error {
+    color: var(--danger);
+    font-size: 0.875rem;
+    margin-top: 8px;
+    display: none;
+    font-weight: 500;
+}
+
+/* ============================================
+   TABLAS - Estilo profesional
+   ============================================ */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 24px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+th, td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+th {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+tr {
+    transition: background-color var(--transition-fast);
+}
+
+tr:hover {
+    background-color: var(--gray-50);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.totals-row {
+    background-color: var(--info-light);
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* ============================================
+   FILTROS - Diseño limpio
+   ============================================ */
+.filters {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 24px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    border: 2px solid var(--gray-200);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+    flex: 1;
+}
+
+/* ============================================
+   COTIZACIONES - Sistema mejorado
+   ============================================ */
+.quote-items {
+    margin-top: 24px;
+}
+
+.quote-item {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    background-color: var(--white);
+    transition: all var(--transition-base);
+}
+
+.quote-item:hover {
+    border-color: var(--secondary);
+    box-shadow: var(--shadow-md);
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-quantity, .item-price {
+    width: 120px;
+}
+
+.quote-summary {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    margin-top: 24px;
+    border: 2px solid var(--gray-200);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    font-size: 1rem;
+}
+
+.summary-row.total {
+    font-weight: 800;
+    font-size: 1.5rem;
+    border-top: 3px solid var(--primary);
+    padding-top: 16px;
+    margin-top: 16px;
+    color: var(--primary);
+}
+
+/* ============================================
+   NOTIFICACIONES - Alertas mejoradas
+   ============================================ */
+.notification {
+    padding: 16px 20px;
+    border-radius: var(--radius-md);
+    margin-bottom: 24px;
+    display: none;
+    font-weight: 500;
+    animation: slideIn var(--transition-base);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.notification.success {
+    background-color: var(--success-light);
+    border-left: 4px solid var(--success);
+    color: #065f46;
+}
+
+.notification.error {
+    background-color: var(--danger-light);
+    border-left: 4px solid var(--danger);
+    color: #991b1b;
+}
+
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 32px 0;
+    margin-top: 60px;
+    box-shadow: var(--shadow-lg);
+}
+
+footer p {
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 20px;
+    }
+    
+    .services-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 20px;
+        padding: 16px 0;
+    }
+    
+    .logo-text h1 {
+        font-size: 1.5rem;
+    }
+    
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    nav a {
+        padding: 8px 14px;
+        font-size: 0.875rem;
+    }
+    
+    .hero {
+        padding: 60px 24px;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+    
+    .section {
+        padding: 24px 20px;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .filters {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .filter-group {
+        min-width: 100%;
+    }
+    
+    .quote-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .item-quantity, .item-price {
+        width: 100%;
+    }
+    
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    table {
+        font-size: 0.875rem;
+    }
+    
+    th, td {
+        padding: 12px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}
