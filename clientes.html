@@ -1,0 +1,120 @@
+<!-- clientes.html -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Clientes - Freelance</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <nav class="nav"><a href="index.html">Inicio</a> › <span>Clientes</span></nav>
+  <main class="container">
+    <h2>Gestión de Clientes</h2>
+
+    <form id="formCliente">
+      <input type="hidden" id="IdCliente" />
+      <label>Nombre<span class="req">*</span></label>
+      <input type="text" id="NombreCliente" required />
+      <label>Email<span class="req">*</span></label>
+      <input type="email" id="Email" required />
+      <label>Teléfono</label>
+      <input type="text" id="Telefono" />
+      <div class="actions">
+        <button type="submit" id="btnGuardar" class="btn">Guardar</button>
+        <button type="button" id="btnNuevo" class="btn alt">Nuevo</button>
+      </div>
+    </form>
+
+    <h3>Lista de Clientes</h3>
+    <table id="tblClientes" class="table">
+      <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </main>
+  <script src="app.js"></script>
+  <script>
+    //clientes.js 
+    document.addEventListener('DOMContentLoaded',()=>{
+        const form =document.getElementById('formCliente');
+        const tblBody =document.querySelector('#tblClientes tbody');
+        const loadClientes =()=>{
+            fetch('/api/clientes')
+            tblBody.innerHTML='';
+            list.forEach(c =>{
+                fetch('/api/clientes').then(r=> r.json()).then(list=>{
+                    tblBody.innerHTML='';
+                    list.forEach(c =>{
+                        const tr =document.createElement('tr');
+                        tr.innerHTML = `<td>${c.NombreCliente}</td><td>${c.Email}</td><td>${c.Telefono||''}</td>
+            <td>
+              <button data-id="${c.IdCliente}" class="edit">Editar</button>
+              <button data-id="${c.IdCliente}" class="del">Eliminar</button>
+            </td>`;
+            tblBody.appendChild(tr);
+                    });
+            });
+            });
+        };
+        loadClientes();
+        form.addEventListener('submit', e => {
+      e.preventDefault();
+      const id = document.getElementById('IdCliente').value;
+      const payload = new FormData();
+      const nombre = document.getElementById('NombreCliente').value.trim();
+      const email = document.getElementById('Email').value.trim();
+      const tel = document.getElementById('Telefono').value.trim();
+
+      // validaciones
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) { alert('Email inválido'); return; }
+
+      if (!nombre) { alert('Nombre requerido'); return; }
+
+      if (id) {
+        payload.append('action','update');
+        payload.append('IdCliente', id);
+        payload.append('NombreCliente', nombre);
+        payload.append('Email', email);
+        payload.append('Telefono', tel);
+      } else {
+        payload.append('action','create');
+        payload.append('NombreCliente', nombre);
+        payload.append('Email', email);
+        payload.append('Telefono', tel);
+      }
+fetch('api/clientes.php', { method:'POST', body: payload })
+        .then(r => r.json())
+        .then(res => { if (res.success) { alert('Guardado'); form.reset(); loadClients(); } else alert(res.error || 'Error'); })
+        .catch(err => alert('Error en servidor'));
+    });
+
+    document.getElementById('btnNuevo').addEventListener('click', () => form.reset());
+
+    tblBody.addEventListener('click', (e) => {
+      if (e.target.classList.contains('edit')) {
+        const id = e.target.dataset.id;
+        fetch('api/clientes.php').then(r=>r.json()).then(list=>{
+          const c = list.find(x => x.IdCliente == id);
+          if (c) {
+            document.getElementById('IdCliente').value = c.IdCliente;
+            document.getElementById('NombreCliente').value = c.NombreCliente;
+            document.getElementById('Email').value = c.Email;
+            document.getElementById('Telefono').value = c.Telefono;
+            window.scrollTo(0,0);
+          }
+        });
+      }
+      if (e.target.classList.contains('del')) {
+        if (!confirm('Eliminar cliente?')) return;
+        const id = e.target.dataset.id;
+        const fd = new FormData();
+        fd.append('action','delete');
+        fd.append('IdCliente', id);
+        fetch('api/clientes.php', { method:'POST', body: fd })
+          .then(r => r.json()).then(res => { if (res.success) loadClients(); else alert(res.error); });
+      }
+    });
+  });
+  </script>
+</body>
+</html>
