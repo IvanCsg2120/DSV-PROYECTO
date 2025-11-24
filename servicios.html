@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Servicios - Catálogo</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Estilos específicos del catálogo (puedes moverlos a css/style.css) -->
+  <style>
+    .catalogo {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      max-height: 82vh;
+      overflow-y: auto;
+      padding-right: 10px;
+      scroll-behavior: smooth;
+      padding-bottom: 12px;
+    }
+
+    .servicio-item {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      background: #fff;
+      padding: 18px;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(15,23,42,0.06);
+      transition: transform .14s ease, box-shadow .14s ease;
+    }
+    .servicio-item:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(15,23,42,0.09); }
+
+    .servicio-item img {
+      width: 230px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    .servicio-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .servicio-info h3 {
+      margin: 0;
+      font-size: 22px;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .servicio-info p.desc {
+      margin: 0;
+      color: #475569;
+      font-size: 15px;
+      line-height: 1.5;
+      max-width: 720px;
+    }
+
+    .meta-row {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-top:8px;
+    }
+
+    .precio {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0d6efd;
+    }
+
+    .btn-catalogo {
+      padding: 9px 14px;
+      background: #0d6efd;
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-outline {
+      padding: 8px 12px;
+      background: transparent;
+      color: #0d6efd;
+      border: 1px solid #dbeafe;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* layout responsive */
+    @media (max-width: 900px) {
+      .servicio-item { flex-direction: column; align-items: flex-start; }
+      .servicio-item img { width: 100%; height: 180px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <img src="img/logo.png" class="logo" alt="logo">
+    <h2>Catálogo de Servicios</h2>
+    <button class="btn" style="margin-left:auto" onclick="logout()">Cerrar sesión</button>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Servicios Disponibles</h2>
+      <p class="small">Desplázate hacia abajo para ver los servicios. Toca “Solicitar Servicio” para añadirlo a la cotización.</p>
+
+      <!-- Botón para servicio personalizado -->
+      <div style="margin:12px 0 18px 0;">
+        <button class="btn-outline" onclick="solicitarServicioPersonalizado()">
+          ¿No encuentras el servicio que buscas? Solicítalo aquí
+        </button>
+      </div>
+
+      <!-- Contenedor dinámico -->
+      <div id="catalogoServicios" class="catalogo" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <!-- scripts (solo los necesarios para este módulo) -->
+  <script src="js/db.js"></script>      <!-- IndexedDB utilities (openDB, getAll, etc.) -->
+  <script src="js/auth.js"></script>    <!-- logout(), ensureDBReady() -->
+  <script src="js/servicios.js"></script> <!-- archivo que te paso a continuación -->
+</body>
+</html>

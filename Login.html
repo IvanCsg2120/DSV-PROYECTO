@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Iniciar sesión - Freelancer</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="auth-page">
+
+  <main class="card auth-card" id="loginCard">
+    <img src="img/logo.png" alt="logo" class="logo-small" />
+    <h1>Iniciar sesión</h1>
+
+    <form id="loginForm" onsubmit="return login(event)">
+      <label for="cedula">Cédula</label>
+      <input id="cedula" type="text" placeholder="Ej: 123456789" required />
+      
+      <label for="nombre">Nombre completo</label>
+      <input id="nombre" type="text" placeholder="Ej: Juan Pérez" required />
+
+      <div style="margin-top:12px">
+        <button class="btn" type="submit">Entrar</button>
+      </div>
+
+      <p class="small" style="margin-top:10px">
+        ¿No tienes cuenta? <a href="#" onclick="showRegister()">Registrarse</a>
+      </p>
+    </form>
+  </main>
+
+  <!-- FORMULARIO REGISTRO -->
+  <main class="card auth-card" id="registerCard" style="display:none;">
+    <img src="img/logo.png" alt="logo" class="logo-small" />
+    <h1>Registro</h1>
+
+    <form id="registerForm" onsubmit="return register(event)">
+      <label>Nombre</label>
+      <input id="regNombre" type="text" required />
+
+      <label>Apellido</label>
+      <input id="regApellido" type="text" required />
+
+      <label>Cédula</label>
+      <input id="regCedula" type="text" required />
+
+      <label>Email</label>
+      <input id="regEmail" type="email" required />
+
+      <div style="margin-top:12px">
+        <button class="btn" type="submit">Registrar</button>
+      </div>
+
+      <p class="small" style="margin-top:10px">
+        ¿Ya tienes cuenta? <a href="#" onclick="showLogin()">Volver al login</a>
+      </p>
+    </form>
+  </main>
+
+  <script>
+    function showRegister() {
+      document.getElementById("loginCard").style.display = "none";
+      document.getElementById("registerCard").style.display = "block";
+    }
+
+    function showLogin() {
+      document.getElementById("registerCard").style.display = "none";
+      document.getElementById("loginCard").style.display = "block";
+    }
+  </script>
+
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+
+</body>
+</html>

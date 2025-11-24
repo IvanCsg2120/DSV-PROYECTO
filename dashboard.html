@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard - Freelancer</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="header">
+    <img src="img/logo.png" class="logo" alt="logo"/>
+    <div>
+      <h1>Panel Principal</h1>
+      <small id="usuarioNombre" class="small"></small>
+    </div>
+    <nav class="menu-right">
+      <button class="btn" onclick="logout()">Cerrar sesión</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Módulos</h2>
+      <div class="grid">
+        <a class="tile" href="clientes.html">Clientes</a>
+        <a class="tile" href="servicios.html">Servicios</a>
+        <a class="tile" href="cotizaciones.html">Cotizaciones</a>
+        <a class="tile" href="reporte.html">Reportes</a>
+      </div>
+    </section>
+
+    <section id="resumen" class="card">
+      <h3>Resumen rápido</h3>
+      <div id="resumenContenido"><p class="small">Cargando...</p></div>
+    </section>
+  </main>
+
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Mostrar nombre de usuario y resumen simple
+    (function init() {
+      const s = localStorage.getItem("sessionUser");
+      if (!s) { location.href = "login.html"; return; }
+      const user = JSON.parse(s);
+      document.getElementById("usuarioNombre").textContent = user.nombre || user.email;
+
+      // Resumen simple: contar clientes/servicios/cotizaciones
+      async function cargarResumen() {
+        await openDB(); // db.js debe exponer openDB() o abrir DB al cargar
+        const clientes = await getAll("clientes");
+        const servicios = await getAll("servicios");
+        const cotizaciones = await getAll("cotizaciones");
+        document.getElementById("resumenContenido").innerHTML = `
+          <p>Clientes: <b>${clientes.length}</b></p>
+          <p>Servicios: <b>${servicios.length}</b></p>
+          <p>Cotizaciones: <b>${cotizaciones.length}</b></p>
+        `;
+      }
+      cargarResumen();
+    })();
+  </script>
+</body>
+</html>

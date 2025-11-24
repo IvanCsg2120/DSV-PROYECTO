@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reportes - Freelancer</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="header">
+    <img src="img/logo.png" class="logo" alt="logo"/>
+    <h2>Reportes</h2>
+    <button class="btn" style="margin-left:auto" onclick="logout()">Salir</button>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h3>Reporte de Cotizaciones</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <select id="repCliente"><option value="">-- Filtrar por cliente --</option></select>
+        <input id="repDesde" type="date" />
+        <input id="repHasta" type="date" />
+        <button class="btn" onclick="generarReporte()">Generar</button>
+        <button class="btn secondary" onclick="exportarReporteCSV()">Exportar CSV</button>
+      </div>
+
+      <div id="reporteArea">Seleccione filtros y presione Generar.</div>
+    </section>
+  </main>
+
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    async function cargarClientes() {
+      const clientes = await getAll("clientes");
+      const sel = document.getElementById("repCliente");
+      sel.innerHTML = '<option value="">-- Todos --</option>';
+      clientes.forEach(c => sel.innerHTML += `<option value="${c.id}">${c.nombre}</option>`);
+    }
+
+    async function generarReporte() {
+      const clienteId = document.getElementById("repCliente").value;
+      const desde = document.getElementById("repDesde").value;
+      const hasta = document.getElementById("repHasta").value;
+      let datos = await getAll("cotizaciones");
+      if (clienteId) datos = datos.filter(d => d.clienteId === Number(clienteId));
+      if (desde) datos = datos.filter(d => d.fecha >= desde);
+      if (hasta) datos = datos.filter(d => d.fecha <= hasta);
+
+      if (!datos.length) { document.getElementById("reporteArea").innerHTML = "<p class='small'>No hay resultados.</p>"; return; }
+
+      const clientes = await getAll("clientes");
+      let html = "<table class='table'><thead><tr><th>Fecha</th><th>Id</th><th>Cliente</th><th>Subtotal</th><th>Impuesto</th><th>Total</th></tr></thead><tbody>";
+      let totalSub = 0, totalImp = 0, totalAll = 0;
+      datos.forEach(d => {
+        const cliente = clientes.find(c => c.id === d.clienteId) || { nombre: "" };
+        html += `<tr><td>${d.fecha}</td><td>${d.id}</td><td>${cliente.nombre}</td><td>$${d.subtotal.toFixed(2)}</td><td>$${d.impuesto.toFixed(2)}</td><td>$${d.total.toFixed(2)}</td></tr>`;
+        totalSub += Number(d.subtotal);
+        totalImp += Number(d.impuesto);
+        totalAll += Number(d.total);
+      });
+      html += `</tbody></table>
+        <div style="margin-top:8px"><b>Totales:</b> Subtotal $${totalSub.toFixed(2)} - Impuesto $${totalImp.toFixed(2)} - Total $${totalAll.toFixed(2)}</div>`;
+      document.getElementById("reporteArea").innerHTML = html;
+    }
+
+    async function exportarReporteCSV() {
+      // reusar la lógica de generarReporte para obtener los datos filtrados
+      const clienteId = document.getElementById("repCliente").value;
+      const desde = document.getElementById("repDesde").value;
+      const hasta = document.getElementById("repHasta").value;
+      let datos = await getAll("cotizaciones");
+      if (clienteId) datos = datos.filter(d => d.clienteId === Number(clienteId));
+      if (desde) datos = datos.filter(d => d.fecha >= desde);
+      if (hasta) datos = datos.filter(d => d.fecha <= hasta);
+      if (!datos.length) return alert("No hay datos a exportar.");
+      const clientes = await getAll("clientes");
+      let csv = "Fecha,Id,Cliente,Subtotal,Impuesto,Total\n";
+      datos.forEach(d => {
+        const cliente = clientes.find(c => c.id === d.clienteId) || { nombre: "" };
+        csv += `${d.fecha},${d.id},"${cliente.nombre}",${d.subtotal},${d.impuesto},${d.total}\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `reporte_cotizaciones_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    (async function init() {
+      await openDB();
+      await cargarClientes();
+    })();
+  </script>
+</body>
+</html>

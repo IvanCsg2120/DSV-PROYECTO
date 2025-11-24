@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cotizaciones - Freelancer</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="header">
+    <img src="img/logo.png" class="logo" alt="logo" />
+    <h2>Cotizaciones</h2>
+    <button class="btn" style="margin-left:auto" onclick="logout()">Salir</button>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h3>Crear Cotización</h3>
+
+      <label>Cliente (obligatorio)</label>
+      <select id="cot_cliente"></select>
+
+      <label>Servicio</label>
+      <select id="cot_servicio"></select>
+
+      <label>Cantidad</label>
+      <input id="cot_cantidad" type="number" min="1" value="1" />
+
+      <div style="margin-top:8px">
+        <button class="btn" onclick="agregarItem()">Agregar ítem</button>
+      </div>
+
+      <h4 style="margin-top:12px">Ítems</h4>
+      <ul id="cot_items"></ul>
+
+      <div style="margin-top:12px">
+        <button class="btn" onclick="guardarCotizacion()">Guardar Cotización</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Listado de Cotizaciones</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <select id="filtroCliente"><option value="">-- Filtrar por cliente --</option></select>
+        <input id="fdesde" type="date" />
+        <input id="fhasta" type="date" />
+        <button class="btn" onclick="filtrar()">Filtrar</button>
+        <button class="btn secondary" onclick="listarCotizaciones()">Limpiar</button>
+        <button class="btn" onclick="exportarCSV()">Exportar CSV</button>
+      </div>
+      <div id="tblCotizaciones">Cargando...</div>
+    </section>
+  </main>
+
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    let items = [];
+
+    async function cargarSelects() {
+      const clientes = await getAll("clientes");
+      const servicios = await getAll("servicios");
+      const selCli = document.getElementById("cot_cliente");
+      const filtroCli = document.getElementById("filtroCliente");
+      const selSrv = document.getElementById("cot_servicio");
+      selCli.innerHTML = '<option value="">-- Seleccione cliente --</option>';
+      filtroCli.innerHTML = '<option value="">-- Todos --</option>';
+      servicios.forEach(s => selSrv.innerHTML += `<option value="${s.id}" data-precio="${s.precio}">${s.nombre}</option>`);
+      clientes.forEach(c => {
+        selCli.innerHTML += `<option value="${c.id}">${c.nombre}</option>`;
+        filtroCli.innerHTML += `<option value="${c.id}">${c.nombre}</option>`;
+      });
+    }
+
+    function agregarItem() {
+      const cli = document.getElementById("cot_cliente").value;
+      if (!cli) return alert("Seleccione un cliente (obligatorio).");
+      const sel = document.getElementById("cot_servicio");
+      const servId = sel.value;
+      const cantidad = Number(document.getElementById("cot_cantidad").value) || 1;
+      if (!servId) return alert("Seleccione un servicio.");
+      if (cantidad < 1) return alert("Cantidad mínima 1.");
+      const precio = Number(sel.selectedOptions[0].dataset.precio);
+      const nombre = sel.selectedOptions[0].text;
+      items.push({ servicioId: Number(servId), nombre, cantidad, precio });
+      mostrarItems();
+    }
+
+    function mostrarItems() {
+      const ul = document.getElementById("cot_items");
+      ul.innerHTML = "";
+      items.forEach((it, idx) => {
+        ul.innerHTML += `<li>${it.nombre} × ${it.cantidad} = $${(it.cantidad * it.precio).toFixed(2)}
+          <button class="btn secondary" onclick="quitarItem(${idx})">Quitar</button>
+        </li>`;
+      });
+    }
+
+    function quitarItem(i) { items.splice(i,1); mostrarItems(); }
+
+    async function guardarCotizacion() {
+      const clienteId = document.getElementById("cot_cliente").value;
+      if (!clienteId) return alert("Cliente obligatorio.");
+      if (!items.length) return alert("Agrega al menos un ítem.");
+      const subtotal = items.reduce((a,b)=>a + (b.precio * b.cantidad), 0);
+      const impuesto = Number((subtotal * 0.08).toFixed(2));
+      const total = Number((subtotal + impuesto).toFixed(2));
+      const cot = {
+        fecha: new Date().toISOString().slice(0,10),
+        clienteId: Number(clienteId),
+        items,
+        subtotal,
+        impuesto,
+        total
+      };
+      await addItem("cotizaciones", cot);
+      alert("Cotización guardada.");
+      items = [];
+      mostrarItems();
+      listarCotizaciones();
+    }
+
+    async function listarCotizaciones(arr) {
+      const datos = arr || await getAll("cotizaciones");
+      const div = document.getElementById("tblCotizaciones");
+      if (!datos.length) { div.innerHTML = "<p class='small'>No hay cotizaciones.</p>"; return; }
+      let html = "<table class='table'><thead><tr><th>Fecha</th><th>#</th><th>Cliente</th><th>Subtotal</th><th>Imp</th><th>Total</th><th></th></tr></thead><tbody>";
+      const clientes = await getAll("clientes");
+      datos.forEach(d => {
+        const cliente = clientes.find(c => c.id === d.clienteId) || { nombre: "Sin nombre" };
+        html += `<tr>
+          <td>${d.fecha}</td>
+          <td>${d.id}</td>
+          <td>${cliente.nombre}</td>
+          <td>$${Number(d.subtotal).toFixed(2)}</td>
+          <td>$${Number(d.impuesto).toFixed(2)}</td>
+          <td>$${Number(d.total).toFixed(2)}</td>
+          <td><button class="btn" onclick='ver(${d.id})'>Ver</button> <button class="btn secondary" onclick='borrarCot(${d.id})'>Borrar</button></td>
+        </tr>`;
+      });
+      html += "</tbody></table>";
+      div.innerHTML = html;
+    }
+
+    async function ver(id) {
+      const c = await getItem("cotizaciones", id);
+      let detalles = `<h4>Detalle Cotización #${c.id}</h4><p>Fecha: ${c.fecha}</p>`;
+      detalles += "<ul>";
+      c.items.forEach(i => detalles += `<li>${i.nombre} × ${i.cantidad} = $${(i.precio * i.cantidad).toFixed(2)}</li>`);
+      detalles += `</ul><p>Subtotal: $${c.subtotal.toFixed(2)}</p><p>Impuesto: $${c.impuesto.toFixed(2)}</p><p>Total: $${c.total.toFixed(2)}</p>`;
+      alert(detalles.replace(/<[^>]+>/g, "\n")); // alert simple con texto plano
+    }
+
+    async function borrarCot(id) {
+      if (!confirm("¿Borrar cotización?")) return;
+      await deleteItem("cotizaciones", id);
+      listarCotizaciones();
+    }
+
+    function filtrar() {
+      const clienteId = document.getElementById("filtroCliente").value;
+      const desde = document.getElementById("fdesde").value;
+      const hasta = document.getElementById("fhasta").value;
+      getAll("cotizaciones").then(datos => {
+        let res = datos;
+        if (clienteId) res = res.filter(r => r.clienteId === Number(clienteId));
+        if (desde) res = res.filter(r => r.fecha >= desde);
+        if (hasta) res = res.filter(r => r.fecha <= hasta);
+        listarCotizaciones(res);
+      });
+    }
+
+    async function exportarCSV() {
+      const datos = await getAll("cotizaciones");
+      if (!datos.length) return alert("No hay datos a exportar.");
+      const clientes = await getAll("clientes");
+      // construir CSV simple
+      let csv = "Fecha,Id,Cliente,Subtotal,Impuesto,Total\n";
+      datos.forEach(d => {
+        const cliente = clientes.find(c => c.id === d.clienteId) || { nombre: "" };
+        csv += `${d.fecha},${d.id},"${cliente.nombre}",${d.subtotal},${d.impuesto},${d.total}\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `cotizaciones_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    (async function init() {
+      await openDB();
+      await cargarSelects();
+      listarCotizaciones();
+    })();
+  </script>
+</body>
+</html>
