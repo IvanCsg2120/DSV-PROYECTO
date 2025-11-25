@@ -331,7 +331,7 @@
     (function init() {
       const s = localStorage.getItem("sessionUser");
       if (!s) { 
-        location.href = "login.html"; 
+        location.href = "index.html"; 
         return; 
       }
 
@@ -406,7 +406,7 @@
     function logout() {
       if (confirm("¿Estás seguro que deseas cerrar sesión?")) {
         localStorage.removeItem("sessionUser");
-        location.href = "login.html";
+        location.href = "index.html";
       }
     }
 
@@ -448,3 +448,4 @@
   </script>
 </body>
 </html>
+
