@@ -2,6 +2,7 @@
 // FUNCIONES AUXILIARES
 // ===============================
 function clean(str) {
+  if (!str) return '';
   return str
     .toLowerCase()
     .normalize("NFD")
@@ -11,13 +12,15 @@ function clean(str) {
 }
 
 // ===============================
-// INICIAR SESIÓN
+// INICIAR SESIÓN - CORREGIDO
 // ===============================
 async function login(e) {
   if (e) e.preventDefault();
 
   const cedula = document.getElementById("cedula").value.trim();
   const nombreInput = document.getElementById("nombre").value.trim();
+
+  console.log("Intentando login con:", { cedula, nombreInput }); // Debug
 
   if (!cedula || !nombreInput) {
     alert("Completa cédula y nombre.");
@@ -27,13 +30,22 @@ async function login(e) {
   await ensureDBReady();
   const users = await getAll("users");
 
-  const matchingUser = users.find(u =>
-    u.cedula === cedula &&
-    clean(u.nombre) === clean(nombreInput)
-  );
+  console.log("Usuarios en DB:", users); // Debug
+
+  // CORRECCIÓN: Buscar solo por cédula
+  const matchingUser = users.find(u => {
+    console.log("Comparando:", u.cedula, "con", cedula); // Debug
+    return u.cedula === cedula;
+  });
 
   if (!matchingUser) {
-    alert("Cédula o nombre incorrectos.");
+    alert("Cédula no encontrada. Regístrate primero.");
+    return false;
+  }
+
+  // Verificar nombre (opcional, pero mantengamos la validación)
+  if (clean(matchingUser.nombre) !== clean(nombreInput)) {
+    alert("El nombre no coincide con la cédula proporcionada.");
     return false;
   }
 
@@ -46,12 +58,13 @@ async function login(e) {
   };
 
   localStorage.setItem("sessionUser", JSON.stringify(session));
+  alert(`¡Bienvenido ${matchingUser.nombre}!`);
   location.href = "dashboard.html";
   return false;
 }
 
 // ===============================
-// REGISTRO DE USUARIO
+// REGISTRO DE USUARIO - CORREGIDO
 // ===============================
 async function register(e) {
   if (e) e.preventDefault();
@@ -61,6 +74,8 @@ async function register(e) {
   const cedula = document.getElementById("regCedula").value.trim();
   const email = document.getElementById("regEmail").value.trim();
 
+  console.log("Registrando:", { nombre, apellido, cedula, email }); // Debug
+
   if (!nombre || !apellido || !cedula || !email) {
     alert("Todos los campos son obligatorios.");
     return false;
@@ -69,29 +84,60 @@ async function register(e) {
   await ensureDBReady();
   const users = await getAll("users");
 
+  console.log("Usuarios existentes:", users); // Debug
+
+  // Verificar si ya existe la cédula
   if (users.some(u => u.cedula === cedula)) {
     alert("Ya existe un usuario con esta cédula.");
     return false;
   }
 
-  if (users.some(u => u.email === email)) {
+  // Verificar si ya existe el email
+  if (users.some(u => u.email && u.email.toLowerCase() === email.toLowerCase())) {
     alert("Ya existe un usuario con este email.");
     return false;
   }
 
   const newUser = {
     nombre: `${nombre} ${apellido}`,
-    cedula,
-    email,
+    cedula: cedula,
+    email: email,
     fechaRegistro: new Date().toISOString().slice(0, 10)
   };
 
-  await addItem("users", newUser);
-  alert("Registro exitoso. Ahora puedes iniciar sesión.");
-  showLogin();
+  console.log("Guardando usuario:", newUser); // Debug
+
+  try {
+    const userId = await addItem("users", newUser);
+    console.log("Usuario guardado con ID:", userId); // Debug
+    
+    // Verificar que se guardó correctamente
+    const updatedUsers = await getAll("users");
+    console.log("Usuarios después de guardar:", updatedUsers); // Debug
+    
+    alert("✅ Registro exitoso. Ahora puedes iniciar sesión.");
+    showLogin();
+  } catch (error) {
+    console.error("Error al guardar usuario:", error);
+    alert("❌ Error en el registro. Intenta nuevamente.");
+  }
+  
   return false;
 }
 
+// ===============================
+// FUNCIÓN PARA VER USUARIOS (DEBUG)
+// ===============================
+async function debugUsers() {
+  await ensureDBReady();
+  const users = await getAll("users");
+  console.log("=== DEBUG USUARIOS ===");
+  console.log("Total usuarios:", users.length);
+  users.forEach((user, index) => {
+    console.log(`Usuario ${index + 1}:`, user);
+  });
+  console.log("======================");
+}
 
 // ===============================
 // CONTROL DE SESIÓN
@@ -107,7 +153,9 @@ function ensureAuthenticated() {
   return JSON.parse(session);
 }
 
+// Hacer funciones globales
 window.login = login;
 window.register = register;
 window.logout = logout;
 window.ensureAuthenticated = ensureAuthenticated;
+window.debugUsers = debugUsers; // Para debugging
