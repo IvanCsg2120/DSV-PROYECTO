@@ -9,7 +9,7 @@
   // asegurar DB y sesión
   await openDB();
   const session = localStorage.getItem("sessionUser");
-  if (!session) { location.href = "login.html"; return; }
+  if (!session) { location.href = "index.html"; return; }
   const user = JSON.parse(session);
   const userEl = document.getElementById("usuarioNombre");
   if (userEl) userEl.textContent = user.nombre || user.email;
@@ -33,3 +33,4 @@
 
   cargarResumen();
 })();
+
