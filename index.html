@@ -16,19 +16,17 @@
   <div class="auth-container">
 
     <!-- LOGO ENCIMA DEL WELCOME -->
-    <div class="welcome-logo">
-      <
-    </div>
+    <div class="welcome-logo"></div>
 
     <!-- SECCIÓN DE BIENVENIDA -->
     <div class="welcome-section">
       <img src="img/logo.png" class="logo-welcome" />
-
       <img src="img/Nombre.PNG" class="logo-welcome" />
       <h1>Bienvenido!</h1>
       <div class="welcome-divider"></div>
       <p>
-        Controla cada detalle: desde diagnósticos y costos hasta entregas. Gestiona tus servicios de cómputo con eficiencia y total profesionalismo.
+        Controla cada detalle: desde diagnósticos y costos hasta entregas.
+        Gestiona tus servicios de cómputo con eficiencia y profesionalismo.
       </p>
     </div>
 
@@ -48,13 +46,7 @@
           <input id="nombre" type="text" placeholder="Juan Pérez" required />
         </div>
 
-        <button class="btn" type="submit">Submit</button>
-
-        <div class="social-icons">
-          <a href="#" class="social-icon">f</a>
-          <a href="#" class="social-icon">📷</a>
-          <a href="#" class="social-icon">P</a>
-        </div>
+        <button class="btn" type="submit">Ingresar</button>
 
         <p class="small">
           ¿No tienes cuenta? 
@@ -72,31 +64,25 @@
         
         <label>Nombre</label>
         <div class="input-wrapper">
-          <input id="regNombre" type="text" placeholder="Tu nombre" required />
+          <input id="regNombre" type="text" required />
         </div>
 
         <label>Apellido</label>
         <div class="input-wrapper">
-          <input id="regApellido" type="text" placeholder="Tu apellido" required />
+          <input id="regApellido" type="text" required />
         </div>
 
         <label>Cédula</label>
         <div class="input-wrapper">
-          <input id="regCedula" type="text" placeholder="Tu cédula" required />
+          <input id="regCedula" type="text" required />
         </div>
 
         <label>Email</label>
         <div class="input-wrapper">
-          <input id="regEmail" type="email" placeholder="tu@email.com" required />
+          <input id="regEmail" type="email" required />
         </div>
 
-        <button class="btn" type="submit">Submit</button>
-
-        <div class="social-icons">
-          <a href="#" class="social-icon">f</a>
-          <a href="#" class="social-icon">📷</a>
-          <a href="#" class="social-icon">P</a>
-        </div>
+        <button class="btn" type="submit">Registrar</button>
 
         <p class="small">
           ¿Ya tienes cuenta? 
@@ -107,51 +93,8 @@
 
   </div>
 
-  <script>
-    function showRegister() {
-      const loginCard = document.getElementById("loginCard");
-      const registerCard = document.getElementById("registerCard");
-      
-      loginCard.classList.add("hiding");
-      setTimeout(() => {
-        loginCard.style.display = "none";
-        loginCard.classList.remove("hiding");
-        registerCard.style.display = "block";
-        registerCard.classList.add("showing");
-        setTimeout(() => registerCard.classList.remove("showing"), 350);
-      }, 350);
-    }
-
-    function showLogin() {
-      const loginCard = document.getElementById("loginCard");
-      const registerCard = document.getElementById("registerCard");
-      
-      registerCard.classList.add("hiding");
-      setTimeout(() => {
-        registerCard.style.display = "none";
-        registerCard.classList.remove("hiding");
-        loginCard.style.display = "block";
-        loginCard.classList.add("showing");
-        setTimeout(() => loginCard.classList.remove("showing"), 350);
-      }, 350);
-    }
-
-    // Simulación
-    function login(event) {
-      event.preventDefault();
-      alert("Login enviado");
-      return false;
-    }
-
-    function register(event) {
-      event.preventDefault();
-      alert("Registro enviado");
-      return false;
-    }
-  </script>
-
-  <script src="js/db.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/db.js"></script>
 
 </body>
 </html>
