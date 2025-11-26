@@ -1,4 +1,3 @@
-// js/auth.js - Versión InfinityFree
 async function register(e) {
     if (e) e.preventDefault();
 
@@ -6,8 +5,9 @@ async function register(e) {
     const apellido = document.getElementById("regApellido").value.trim();
     const cedula = document.getElementById("regCedula").value.trim();
     const email = document.getElementById("regEmail").value.trim();
+    const telefono = document.getElementById("regTelefono").value.trim();
 
-    if (!nombre || !apellido || !cedula || !email) {
+    if (!nombre || !apellido || !cedula || !email || !telefono) {
         alert("Todos los campos son obligatorios.");
         return false;
     }
@@ -24,20 +24,45 @@ async function register(e) {
         nombre: `${nombre} ${apellido}`,
         cedula: cedula,
         email: email,
+        telefono: telefono,
         rol: 'usuario'
+        
     };
 
     try {
         await addItem('users', userData);
+        
+        // Sincronizar como cliente
+        await syncUserAsClient(userData);
+        
         alert("✅ Registro exitoso. Ahora puedes iniciar sesión.");
         showLogin();
     } catch (error) {
+        console.error(error);
         alert("❌ Error en el registro.");
     }
 
     return false;
 }
-
+// Función para sincronizar usuario como cliente
+// Función para sincronizar usuario como cliente
+async function syncUserAsClient(userData) {
+    const clientes = getAll('clientes');
+    
+    // Verificar si ya existe un cliente con este email
+    const existingClient = clientes.find(c => c.email && c.email.toLowerCase() === userData.email.toLowerCase());
+    
+    if (!existingClient) {
+        // Crear nuevo cliente a partir del usuario
+        await addItem('clientes', {
+            nombre: userData.nombre,
+            email: userData.email,
+            telefono: userData.telefono || '', // Se puede dejar vacío o pedir en el registro
+            fecha_registro: new Date().toISOString().split('T')[0]
+        });
+        console.log('✅ Usuario sincronizado como cliente');
+    }
+}
 async function login(e) {
     if (e) e.preventDefault();
 
