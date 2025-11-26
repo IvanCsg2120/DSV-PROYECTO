@@ -1,238 +1,628 @@
-<!-- Referencia del documento del proyecto: /mnt/data/Actividad PROYECTO FINAL v5.pdf -->
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gestión de Clientes — Sistema Freelance (Local)</title>
-
+  <title>Gestión de Clientes — Nexus Pro</title>
+  <link rel="stylesheet" href="css/clientes.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <div class="container">
-    <header class="card" style="margin-bottom:16px;display:flex;align-items:center;gap:14px;">
-      <div>
-        <h1>Gestión de Clientes</h1>
-        <div class="small">Módulo de clientes — datos guardados en LocalStorage (navegador)</div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header" onclick="irAlInicio()" title="Ir al Inicio">
+      <div class="sidebar-logo">
+        <img src="img/logo.png" alt="Nexus Pro Logo" class="logo-sidebar">
       </div>
-      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-        <div class="badge" id="totalBadge">Clientes: 0</div>
-        <div class="controls">
-          <button id="btnExportJSON" class="btn ghost">Exportar JSON</button>
-          <button id="btnExportCSV" class="btn ghost">Exportar CSV</button>
-          <label class="sr-only" for="fileImport">Importar CSV/JSON</label>
-          <input type="file" id="fileImport" accept=".csv,application/json" style="display:none">
-          <button id="btnImport" class="btn ghost">Importar</button>
-          <button id="btnResetData" class="btn alt">Reset datos</button>
+      <div class="sidebar-title">
+        <h2>Nexus Pro</h2>
+        <p>v.0.2.34</p>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <img src="https://ui-avatars.com/api/?name=Juan+Sanchez&background=22CA95&color=fff&bold=true" 
+           alt="Usuario" class="user-avatar-sidebar">
+      <div class="user-info-sidebar">
+        <h3 id="sidebarUserName">Juan Sánchez</h3>
+        <p id="sidebarUserRole">Administrador</p>
+      </div>
+      <div class="add-btn" title="Nuevo" onclick="openNewProjectModal()">
+        <i class="fas fa-plus"></i>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Módulos</div>
+      <a href="clientes.html" class="nav-item active">
+        <i class="fas fa-users"></i>
+        <span>Clientes</span>
+        <span class="nav-badge" id="navBadgeClientes">0</span>
+      </a>
+      <a href="servicios.html" class="nav-item">
+        <i class="fas fa-cogs"></i>
+        <span>Servicios</span>
+        <span class="nav-badge" id="navBadgeServicios">15</span>
+      </a>
+      <a href="cotizaciones.html" class="nav-item">
+        <i class="fas fa-file-contract"></i>
+        <span>Cotizaciones</span>
+        <span class="nav-badge" id="navBadgeCotizaciones">32</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="version-info">
+        <div class="version-icon">
+          <i class="fas fa-rocket"></i>
         </div>
-        <label class="toggle-dark"><input type="checkbox" id="darkMode"> Dark</label>
+        <div class="version-text">
+          <h4>NexusCaster</h4>
+          <p>ver. 0.2.34</p>
+        </div>
+        <button class="version-menu">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-wrapper">
+    <header class="content-topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar clientes..." id="searchInput">
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="topbar-actions">
+          <button class="action-btn" title="Notificaciones" onclick="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="action-badge">3</span>
+          </button>
+          <button class="action-btn" title="Mensajes" onclick="toggleMessages()">
+            <i class="fas fa-envelope"></i>
+            <span class="action-badge">5</span>
+          </button>
+          <button class="action-btn" title="Configuración" onclick="window.location.href='settings.html'">
+            <i class="fas fa-cog"></i>
+          </button>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
       </div>
     </header>
 
-    <section class="card" aria-labelledby="form-title">
-      <h2 id="form-title">Registrar / Editar Cliente</h2>
-
-      <form id="formCliente" novalidate>
-        <input type="hidden" id="IdCliente" />
-
-        <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <div style="flex:2">
-            <label for="NombreCliente">Nombre completo <span class="small" aria-hidden>*</span></label>
-            <input id="NombreCliente" type="text" minlength="3" required placeholder="Ej: Juan Pérez" />
+    <div class="dashboard-content">
+      <div class="clientes-container">
+        <div class="clientes-header">
+          <div class="clientes-title">
+            <h1>Gestión de Clientes</h1>
+            <p>Administra y gestiona todos los clientes del sistema</p>
           </div>
-          <div style="flex:1">
-            <label for="FechaRegistro">Fecha de registro</label>
-            <input id="FechaRegistro" type="date" required />
-          </div>
-        </div>
-
-        <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
-          <div style="flex:1">
-            <label for="Email">Correo electrónico</label>
-            <input id="Email" type="email" required placeholder="ejemplo@dominio.com" />
-          </div>
-          <div style="flex:1">
-            <label for="Telefono">Teléfono</label>
-            <input id="Telefono" type="tel" placeholder="6000-0000" />
+          <div class="clientes-actions">
+            <button class="btn-primary" onclick="showAddForm()">
+              <i class="fas fa-plus"></i> Nuevo Cliente
+            </button>
+            <button class="btn-secondary" onclick="exportClientes()">
+              <i class="fas fa-download"></i> Exportar
+            </button>
           </div>
         </div>
 
-        <div class="actions">
-          <button type="submit" class="btn"> Guardar</button>
-          <button type="button" id="btnClear" class="btn alt">Limpiar</button>
-          <button type="button" id="btnValidate" class="btn ghost">Validar</button>
-        </div>
-      </form>
-
-      <div id="searchArea" style="margin-top:12px">
-        <div class="search-row">
-          <input id="q" placeholder="Buscar por nombre o email..." style="flex:1;padding:10px;border-radius:8px;border:1px solid #e6edf3" />
-          <select id="filterDate" style="width:200px">
-            <option value="">Filtrar por fecha</option>
-            <option value="last30">Últimos 30 días</option>
-            <option value="last90">Últimos 90 días</option>
-          </select>
-          <div class="controls">
-            <button id="btnSortName" class="btn ghost">Ordenar nombre ▲▼</button>
-            <button id="btnSortDate" class="btn ghost">Ordenar fecha ▲▼</button>
+        <div class="clientes-card">
+          <div class="search-filters">
+            <div class="search-box">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="searchTableInput" placeholder="Buscar clientes por nombre, email o teléfono...">
+            </div>
+            <div class="filter-group">
+              <select class="filter-select" id="filterStatus">
+                <option value="">Todos los estados</option>
+                <option value="active">Activos</option>
+                <option value="inactive">Inactivos</option>
+              </select>
+              <select class="filter-select" id="filterDate">
+                <option value="">Todo el tiempo</option>
+                <option value="last30">Últimos 30 días</option>
+                <option value="last90">Últimos 90 días</option>
+              </select>
+            </div>
           </div>
+
+          <div class="clientes-table-container">
+            <div class="table-header">
+              <h3>Lista de Clientes</h3>
+              <div class="table-stats">
+                <span class="stat-badge" id="totalClientes">Total: 0</span>
+                <span class="stat-badge" id="activeClientes">Activos: 0</span>
+              </div>
+            </div>
+
+            <div class="table-wrapper">
+              <table class="clientes-table">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Fecha Registro</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="clientesTableBody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
       </div>
-    </section>
+    </div>
+  </main>
 
-    <section style="margin-top:12px">
-      <table class="table" id="tblClientes" aria-label="Lista de clientes">
-        <thead>
-          <tr>
-            <th data-key="NombreCliente">Nombre</th>
-            <th data-key="Email">Email</th>
-            <th data-key="Telefono">Teléfono</th>
-            <th data-key="FechaRegistro">Fecha registro</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
+  <!-- Modal Agregar/Editar -->
+  <div id="clienteModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Agregar Nuevo Cliente</h3>
+        <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
 
+      <form id="clienteForm" class="clientes-form">
+        <input type="hidden" id="clienteId">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="clienteNombre">Nombre completo *</label>
+            <input type="text" id="clienteNombre" required placeholder="Ej: Juan Pérez">
+          </div>
+          <div class="form-group">
+            <label for="clienteEmail">Email *</label>
+            <input type="email" id="clienteEmail" required placeholder="ejemplo@dominio.com">
+          </div>
+          <div class="form-group">
+            <label for="clienteTelefono">Teléfono</label>
+            <input type="tel" id="clienteTelefono" placeholder="6000-0000">
+          </div>
+          <div class="form-group">
+            <label for="clienteFecha">Fecha de registro</label>
+            <input type="date" id="clienteFecha" required>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <div id="toast" class="toast"></div>
+  <div id="toastContainer" class="toast-container"></div>
 
-  <script>
-  // Utilities (self-contained) — storage helpers, sanitize, csv/json helpers
-  (function(){
-    window.getAll = function(key){ try{ return JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){ return []; }};
-    window.saveAll = function(key, arr){ localStorage.setItem(key, JSON.stringify(arr)); };
-    window.nextId = function(entity){ const k='__id_'+entity; let v=parseInt(localStorage.getItem(k)||'0',10); v++; localStorage.setItem(k,String(v)); return v; };
-    window.escapeHTML = function(str){ if (str==null) return ''; return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); };
-    window.csvSafe = function(x){ if (x==null) return '""'; const s=String(x).replace(/"/g,'""'); return '"'+s+'"'; };
-    window.downloadBlob = function(content, filename, type='text/csv'){ const blob=new Blob([content],{type}); const link=document.createElement('a'); link.href=URL.createObjectURL(blob); link.download=filename; document.body.appendChild(link); link.click(); link.remove(); };
-    window.showToast = function(text,type='ok'){ const t=document.getElementById('toast'); t.textContent=text; t.className='toast '+(type==='ok'?'ok':'err'); t.style.display='block'; setTimeout(()=>t.style.opacity='1',10); setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.style.display='none',300); },2200); };
-    window.isValidEmail = function(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); };
-    // CSV parse simple (expecting header)
-    window.parseCSV = function(text){ const lines=text.split(/\r?\n/).filter(Boolean); if(lines.length<1) return []; const headers=lines.shift().split(',').map(h=>h.trim().replace(/^"|"$/g,'')); return lines.map(l=>{ const cols=l.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/g).map(c=>c.replace(/^"|"$/g,'')); const obj={}; headers.forEach((h,i)=>obj[h]=cols[i]||''); return obj; }); };
-  })();
+<script>
+/* ======================
+   CONFIG y UTILIDADES
+   ====================== */
+const DB_PREFIX = 'FreelancerDB_';
+const CLIENTES_KEY = 'clientes';
+const USERS_KEY = 'users';
+const COTIZACIONES_KEY = 'cotizaciones';
 
-  // App logic
-  (function(){
-    const KEY='clientes';
-    const tblBody=document.querySelector('#tblClientes tbody');
-    const form=document.getElementById('formCliente');
-    const qInput=document.getElementById('q');
-    const filterDate=document.getElementById('filterDate');
-    const totalBadge=document.getElementById('totalBadge');
-    let sortNameAsc=null; let sortDateAsc=null;
+/* -- Funciones de "DB" (localStorage) -- */
+async function openDB() {
+  // placeholder para compatibilidad con otros entornos
+  return Promise.resolve();
+}
 
-    // Init demo data if empty (only first time)
-    if(getAll(KEY).length===0){ const demo=[
-      { IdCliente: nextId(KEY), NombreCliente:'ACME, S.A.', Email:'acme@ejemplo.com', Telefono:'6000-0000', FechaRegistro: new Date().toISOString().slice(0,10) },
-      { IdCliente: nextId(KEY), NombreCliente:'Juan Pérez', Email:'jperez@correo.com', Telefono:'61234567', FechaRegistro: new Date().toISOString().slice(0,10) }
-    ]; saveAll(KEY,demo); }
+async function getAll(key) {
+  try {
+    const raw = localStorage.getItem(`${DB_PREFIX}${key}`) || '[]';
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error('Error parseando', key, e);
+    return [];
+  }
+}
 
-    // DOM refs
-    const NombreCliente=document.getElementById('NombreCliente');
-    const Email=document.getElementById('Email');
-    const Telefono=document.getElementById('Telefono');
-    const FechaRegistro=document.getElementById('FechaRegistro');
+async function saveAll(key, arr) {
+  try {
+    localStorage.setItem(`${DB_PREFIX}${key}`, JSON.stringify(arr));
+  } catch (e) {
+    console.error('Error guardando', key, e);
+  }
+}
 
-    FechaRegistro.value=new Date().toISOString().slice(0,10);
+async function addItem(key, item) {
+  const items = await getAll(key);
+  items.push(item);
+  await saveAll(key, items);
+}
 
-    function updateBadge(){ totalBadge.textContent='Clientes: '+getAll(KEY).length; }
+async function getItem(key, id) {
+  const items = await getAll(key);
+  return items.find(i => i.id == id);
+}
 
-    function render(list){ tblBody.innerHTML=''; if(!Array.isArray(list)) list=[]; list.forEach(c=>{
-      const tr=document.createElement('tr');
-      tr.innerHTML=`<td>${escapeHTML(c.NombreCliente)}</td>
-                    <td>${escapeHTML(c.Email)}</td>
-                    <td>${escapeHTML(c.Telefono||'')}</td>
-                    <td>${escapeHTML(c.FechaRegistro)}</td>
-                    <td>
-                      <button class="edit btn ghost" data-id="${c.IdCliente}">Editar</button>
-                      <button class="del btn" data-id="${c.IdCliente}">Eliminar</button>
-                    </td>`;
-      tblBody.appendChild(tr);
-    }); updateBadge(); }
+async function deleteItem(key, id) {
+  const items = await getAll(key);
+  const filtered = items.filter(item => item.id != id);
+  await saveAll(key, filtered);
+}
 
-    function loadAndRender(){ let list=getAll(KEY); // default sort by date desc
-      list.sort((a,b)=>b.FechaRegistro.localeCompare(a.FechaRegistro)); render(list); }
+async function deleteByEmail(key, email) {
+  if (!email) return 0;
+  const items = await getAll(key);
+  const emailLower = email.toLowerCase();
+  const filtered = items.filter(item => !(item.email && item.email.toLowerCase() === emailLower));
+  await saveAll(key, filtered);
+  return items.length - filtered.length;
+}
 
-    loadAndRender();
+function nextId(entity) {
+  const k = `${DB_PREFIX}__id_${entity}`;
+  let v = parseInt(localStorage.getItem(k) || '0', 10);
+  v++;
+  localStorage.setItem(k, String(v));
+  return v;
+}
 
-    // Search + filters
-    function applyFilters(){ let list=getAll(KEY);
-      const q=qInput.value.trim().toLowerCase(); if(q) list=list.filter(c=> (c.NombreCliente||'').toLowerCase().includes(q) || (c.Email||'').toLowerCase().includes(q));
-      const fd=filterDate.value; if(fd==='last30'){ const d=new Date(); d.setDate(d.getDate()-30); list=list.filter(c=> new Date(c.FechaRegistro)>=d);} if(fd==='last90'){ const d=new Date(); d.setDate(d.getDate()-90); list=list.filter(c=> new Date(c.FechaRegistro)>=d);} 
-      // sorting
-      if(sortNameAsc!==null){ list.sort((a,b)=> sortNameAsc ? a.NombreCliente.localeCompare(b.NombreCliente) : b.NombreCliente.localeCompare(a.NombreCliente)); }
-      if(sortDateAsc!==null){ list.sort((a,b)=> sortDateAsc ? a.FechaRegistro.localeCompare(b.FechaRegistro) : b.FechaRegistro.localeCompare(a.FechaRegistro)); }
-      render(list);
+/* ======================
+   SINCRONIZACIÓN users -> clientes
+   ====================== */
+async function syncUsersToClients() {
+  await openDB();
+  const users = await getAll(USERS_KEY);
+  const clientes = await getAll(CLIENTES_KEY);
+  let nuevos = 0;
+
+  for (const user of users) {
+    if (!user.email) continue;
+    const clienteExists = clientes.some(cliente =>
+      cliente.email && cliente.email.toLowerCase() === user.email.toLowerCase()
+    );
+
+    if (!clienteExists) {
+      const nuevoCliente = {
+        id: nextId(CLIENTES_KEY),
+        nombre: user.nombre || user.name || 'Cliente',
+        email: user.email,
+        telefono: user.telefono || '',
+        fecha_registro: user.fecha_registro || new Date().toISOString().split('T')[0],
+        estado: 'active',
+        tipo: 'usuario_registrado'
+      };
+      clientes.push(nuevoCliente);
+      nuevos++;
+    }
+  }
+
+  if (nuevos > 0) {
+    await saveAll(CLIENTES_KEY, clientes);
+  }
+  return nuevos;
+}
+
+/* ======================
+   TOAST
+   ====================== */
+function showToast(message, type = 'success') {
+  const toastContainer = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+    <div class="toast-icon">${type === 'success' ? '✓' : '!'}</div>
+    <div class="toast-message">${message}</div>
+  `;
+  toastContainer.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+
+/* ======================
+   RENDER TABLA
+   ====================== */
+function escapeHTML(str) {
+  if (str == null) return '';
+  return String(str).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]
+  );
+}
+
+function renderClientesTable(clientes) {
+  const tbody = document.getElementById('clientesTableBody');
+  tbody.innerHTML = '';
+
+  if (!clientes || clientes.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; padding: 2rem; color: #888;">
+          No se encontraron clientes
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  clientes.forEach(cliente => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div class="cliente-avatar" style="width: 36px; height: 36px; font-size: 14px; background: linear-gradient(135deg, #22CA95, #00D391); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+            ${escapeHTML((cliente.nombre || ' ').charAt(0).toUpperCase())}
+          </div>
+          <strong>${escapeHTML(cliente.nombre)}</strong>
+        </div>
+      </td>
+      <td>${escapeHTML(cliente.email)}</td>
+      <td>${escapeHTML(cliente.telefono || 'N/A')}</td>
+      <td>${escapeHTML(cliente.fecha_registro)}</td>
+      <td>
+        <span class="status-badge ${cliente.estado === 'active' ? 'status-active' : 'status-inactive'}">
+          ${cliente.estado === 'active' ? 'Activo' : 'Inactivo'}
+        </span>
+      </td>
+      <td>
+        <div class="actions-cell">
+          <button class="action-btn edit-btn" onclick="editCliente(${cliente.id})" title="Editar">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="action-btn delete-btn" onclick="deleteCliente(${cliente.id})" title="Eliminar">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ======================
+   CARGAR CLIENTES
+   ====================== */
+async function loadClientes() {
+  console.log('🔄 Cargando clientes...');
+  await openDB();
+
+  // primero, sincronizar (importa nuevos usuarios como clientes si hay)
+  await syncUsersToClients();
+
+  // obtener clientes (estos son los que realmente se muestran)
+  const clientes = await getAll(CLIENTES_KEY);
+
+  // actualizar estadísticas
+  const totalClientes = document.getElementById('totalClientes');
+  const activeClientes = document.getElementById('activeClientes');
+  const clientesCount = document.getElementById('navBadgeClientes');
+
+  const activeCount = clientes.filter(c => c.estado === 'active').length;
+  totalClientes.textContent = `Total: ${clientes.length}`;
+  activeClientes.textContent = `Activos: ${activeCount}`;
+  if (clientesCount) clientesCount.textContent = clientes.length;
+
+  // renderizar
+  renderClientesTable(clientes);
+}
+
+/* ======================
+   MODAL / FORM
+   ====================== */
+function showAddForm() {
+  document.getElementById('modalTitle').textContent = 'Agregar Nuevo Cliente';
+  document.getElementById('clienteForm').reset();
+  document.getElementById('clienteId').value = '';
+  document.getElementById('clienteFecha').value = new Date().toISOString().split('T')[0];
+  document.getElementById('clienteModal').style.display = 'flex';
+}
+
+async function editCliente(id) {
+  await openDB();
+  const clientes = await getAll(CLIENTES_KEY);
+  const cliente = clientes.find(c => c.id == id);
+  if (cliente) {
+    document.getElementById('modalTitle').textContent = 'Editar Cliente';
+    document.getElementById('clienteId').value = cliente.id;
+    document.getElementById('clienteNombre').value = cliente.nombre;
+    document.getElementById('clienteEmail').value = cliente.email;
+    document.getElementById('clienteTelefono').value = cliente.telefono || '';
+    document.getElementById('clienteFecha').value = cliente.fecha_registro;
+    document.getElementById('clienteModal').style.display = 'flex';
+  }
+}
+
+function closeModal() {
+  document.getElementById('clienteModal').style.display = 'none';
+}
+
+/* ======================
+   GUARDAR CLIENTE (nuevo/editar)
+   ====================== */
+document.getElementById('clienteForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  await openDB();
+
+  const id = document.getElementById('clienteId').value;
+  const nombre = document.getElementById('clienteNombre').value.trim();
+  const email = document.getElementById('clienteEmail').value.trim().toLowerCase();
+  const telefono = document.getElementById('clienteTelefono').value.trim();
+  const fecha = document.getElementById('clienteFecha').value;
+
+  if (nombre.length < 3) {
+    showToast('El nombre debe tener al menos 3 caracteres', 'error');
+    return;
+  }
+  if (!isValidEmail(email)) {
+    showToast('Email inválido', 'error');
+    return;
+  }
+
+  const clientes = await getAll(CLIENTES_KEY);
+
+  if (!id) {
+    if (clientes.some(c => c.email && c.email.toLowerCase() === email)) {
+      showToast('Ya existe un cliente con ese email', 'error');
+      return;
     }
 
-    qInput.addEventListener('input', ()=>applyFilters());
-    filterDate.addEventListener('change', ()=>applyFilters());
-
-    // Sorting buttons
-    document.getElementById('btnSortName').addEventListener('click', ()=>{ sortNameAsc = sortNameAsc === null ? true : !sortNameAsc; sortDateAsc=null; applyFilters(); showToast('Orden por nombre '+(sortNameAsc?'ASC':'DESC')); });
-    document.getElementById('btnSortDate').addEventListener('click', ()=>{ sortDateAsc = sortDateAsc === null ? false : !sortDateAsc; sortNameAsc=null; applyFilters(); showToast('Orden por fecha '+(sortDateAsc?'ASC':'DESC')); });
-
-    // Form submit — create/update with duplicate email prevention
-    form.addEventListener('submit', (e)=>{ e.preventDefault(); const id=document.getElementById('IdCliente').value; const nombre=NombreCliente.value.trim(); const email=Email.value.trim().toLowerCase(); const telefono=Telefono.value.trim(); const fecha=FechaRegistro.value;
-
-      if(nombre.length<3){ showToast('El nombre debe tener al menos 3 caracteres','err'); return; }
-      if(!isValidEmail(email)){ showToast('Email inválido','err'); return; }
-
-      const list=getAll(KEY);
-      if(!id){ // create
-        if(list.some(x=> x.Email && x.Email.toLowerCase()===email)){ showToast('Ya existe un cliente con ese email','err'); return; }
-        const nuevo={ IdCliente: nextId(KEY), NombreCliente:nombre, Email:email, Telefono:telefono, FechaRegistro:fecha };
-        list.push(nuevo); saveAll(KEY,list); showToast('Cliente creado','ok');
-      } else { // update
-        const idx=list.findIndex(x=> String(x.IdCliente)===String(id)); if(idx===-1){ showToast('Cliente no encontrado','err'); return; }
-        // if email changed, ensure no duplicate
-        if(list.some((x,i)=> i!==idx && x.Email && x.Email.toLowerCase()===email)){ showToast('Otro cliente ya usa ese email','err'); return; }
-        list[idx].NombreCliente=nombre; list[idx].Email=email; list[idx].Telefono=telefono; list[idx].FechaRegistro=fecha; saveAll(KEY,list); showToast('Cliente actualizado','ok');
+    const nuevoCliente = {
+      id: nextId(CLIENTES_KEY),
+      nombre,
+      email,
+      telefono,
+      fecha_registro: fecha,
+      estado: 'active',
+      tipo: 'manual'
+    };
+    await addItem(CLIENTES_KEY, nuevoCliente);
+    showToast('Cliente creado exitosamente');
+  } else {
+    const index = clientes.findIndex(c => c.id == id);
+    if (index !== -1) {
+      if (clientes.some((c, i) => i !== index && c.email && c.email.toLowerCase() === email)) {
+        showToast('Otro cliente ya usa ese email', 'error');
+        return;
       }
-      // reset
-      form.reset(); FechaRegistro.value=new Date().toISOString().slice(0,10); NombreCliente.focus(); loadAndRender();
+      clientes[index] = { ...clientes[index], nombre, email, telefono, fecha_registro: fecha };
+      await saveAll(CLIENTES_KEY, clientes);
+      showToast('Cliente actualizado exitosamente');
+    }
+  }
+  closeModal();
+  await loadClientes();
+});
+
+/* ======================
+   ELIMINAR CLIENTE (OPCION A: eliminar también en users)
+   ====================== */
+async function deleteCliente(id) {
+  if (!confirm('¿Estás seguro de que quieres eliminar este cliente?')) {
+    return;
+  }
+
+  try {
+    await openDB();
+    const clientes = await getAll(CLIENTES_KEY);
+    const index = clientes.findIndex(c => c.id == id);
+    if (index === -1) {
+      showToast('Cliente no encontrado', 'error');
+      return;
+    }
+
+    // obtener email para eliminar también en users
+    const clienteEmail = clientes[index].email ? clientes[index].email.toLowerCase() : null;
+
+    // eliminar cliente de clientes[]
+    clientes.splice(index, 1);
+    await saveAll(CLIENTES_KEY, clientes);
+    console.log(`🗑️ Cliente ID ${id} eliminado de ${CLIENTES_KEY}`);
+
+    // si existe email, eliminar usuarios con ese email en USERS_KEY
+    if (clienteEmail) {
+      const users = await getAll(USERS_KEY);
+      const usersBefore = users.length;
+      const filteredUsers = users.filter(u => !(u.email && u.email.toLowerCase() === clienteEmail));
+      if (filteredUsers.length !== usersBefore) {
+        await saveAll(USERS_KEY, filteredUsers);
+        console.log(`🗑️ ${usersBefore - filteredUsers.length} usuario(s) eliminados en ${USERS_KEY} con email ${clienteEmail}`);
+      }
+    }
+
+    showToast('Cliente eliminado correctamente');
+    await loadClientes();
+  } catch (error) {
+    console.error('Error eliminando cliente:', error);
+    showToast('Error al eliminar el cliente', 'error');
+  }
+}
+
+/* ======================
+   EXPORTAR
+   ====================== */
+async function exportClientes() {
+  await openDB();
+  const clientes = await getAll(CLIENTES_KEY);
+  const csv = 'Nombre,Email,Telefono,Fecha Registro,Estado\n' +
+    clientes.map(c =>
+      `"${(c.nombre||'').replace(/"/g,'""')}","${(c.email||'').replace(/"/g,'""')}","${(c.telefono||'').replace(/"/g,'""')}","${c.fecha_registro||''}","${c.estado||''}"`
+    ).join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `clientes_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  showToast('Clientes exportados exitosamente');
+}
+
+/* ======================
+   BÚSQUEDA EN TIEMPO REAL
+   ====================== */
+function setupSearch() {
+  const searchInput = document.getElementById('searchTableInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', async function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      await openDB();
+      const clientes = await getAll(CLIENTES_KEY);
+      const filtered = clientes.filter(cliente =>
+        (cliente.nombre && cliente.nombre.toLowerCase().includes(searchTerm)) ||
+        (cliente.email && cliente.email.toLowerCase().includes(searchTerm)) ||
+        (cliente.telefono && cliente.telefono.toLowerCase().includes(searchTerm))
+      );
+      renderClientesTable(filtered);
     });
+  }
+}
 
-    // Delegated actions edit/delete
-    tblBody.addEventListener('click', (e)=>{
-      const id=e.target.dataset.id; if(!id) return;
-      if(e.target.classList.contains('edit')){
-        const c=getAll(KEY).find(x=> String(x.IdCliente)===String(id)); if(!c) return; document.getElementById('IdCliente').value=c.IdCliente; NombreCliente.value=c.NombreCliente; Email.value=c.Email; Telefono.value=c.Telefono; FechaRegistro.value=c.FechaRegistro; NomeToTop(); }
-      if(e.target.classList.contains('del')){
-        if(!confirm('Confirmar eliminación')) return; let list=getAll(KEY); list=list.filter(x=> String(x.IdCliente)!==String(id)); saveAll(KEY,list); showToast('Cliente eliminado','ok'); loadAndRender(); }
-    });
+/* ======================
+   VALIDACIONES Y OTROS
+   ====================== */
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
-    function NomeToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+function logout() {
+  if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('sessionUser');
+    window.location.href = 'index.html';
+  }
+}
 
-    // Export / Import
-    document.getElementById('btnExportCSV').addEventListener('click', ()=>{
-      const data=getAll(KEY); let csv='Nombre,Email,Telefono,FechaRegistro\n'; data.forEach(r=> csv+=`${csvSafe(r.NombreCliente)},${csvSafe(r.Email)},${csvSafe(r.Telefono)},${csvSafe(r.FechaRegistro)}\n`); downloadBlob(csv,'clientes.csv'); showToast('CSV descargado','ok'); });
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('collapsed');
+}
+function irAlInicio() { window.location.href = 'dashboard.html'; }
+function toggleNotifications() { showToast('No hay nuevas notificaciones'); }
+function toggleMessages() { showToast('Sistema de mensajes en desarrollo'); }
+function openNewProjectModal() { showToast('Función de nuevo proyecto en desarrollo'); }
 
-    document.getElementById('btnExportJSON').addEventListener('click', ()=>{ const data=getAll(KEY); downloadBlob(JSON.stringify(data,null,2),'clientes.json','application/json'); showToast('JSON descargado','ok'); });
-
-    document.getElementById('btnImport').addEventListener('click', ()=> document.getElementById('fileImport').click());
-    document.getElementById('fileImport').addEventListener('change', (ev)=>{
-      const f=ev.target.files[0]; if(!f) return; const reader=new FileReader(); reader.onload=e=>{
-        const txt=e.target.result; const name=f.name.toLowerCase(); try{
-          if(name.endsWith('.json')){ const obj=JSON.parse(txt); if(Array.isArray(obj)){ // merge avoiding duplicates by email
-            let current=getAll(KEY); obj.forEach(it=>{ if(!it.Email) return; if(!current.some(c=> c.Email && c.Email.toLowerCase()===it.Email.toLowerCase())){ it.IdCliente = nextId(KEY); current.push(it); } }); saveAll(KEY,current); showToast('JSON importado','ok'); loadAndRender(); }
-          } else if(name.endsWith('.csv')){ const parsed=parseCSV(txt); let current=getAll(KEY); parsed.forEach(row=>{ const email=row.Email?row.Email.toLowerCase():''; if(!email) return; if(!current.some(c=> c.Email && c.Email.toLowerCase()===email)){ current.push({ IdCliente: nextId(KEY), NombreCliente: row.Nombre||row.Name||row.NombreCliente||'', Email: email, Telefono: row.Telefono||'', FechaRegistro: row.FechaRegistro||new Date().toISOString().slice(0,10) }); } }); saveAll(KEY,current); showToast('CSV importado','ok'); loadAndRender(); } else { showToast('Formato no soportado','err'); }
-        } catch(err){ showToast('Error al importar','err'); }
-      }; reader.readAsText(f);
-    });
-
-    // Reset data
-    document.getElementById('btnResetData').addEventListener('click', ()=>{ if(!confirm('Eliminar TODOS los clientes?')) return; localStorage.removeItem(KEY); localStorage.removeItem('__id_'+KEY); loadAndRender(); showToast('Datos eliminados','ok'); });
-
-    // Validate button (demo)
-    document.getElementById('btnValidate').addEventListener('click', ()=>{ const list=getAll(KEY); const dup=list.map(x=>x.Email&&x.Email.toLowerCase()).filter(Boolean); const dups=dup.filter((v,i,a)=> a.indexOf(v)!==i); if(dups.length) showToast('Emails duplicados detectados: '+Array.from(new Set(dups)).join(', '),'err'); else showToast('No hay duplicados detectados','ok'); });
-
-    // Dark mode
-    const darkToggle=document.getElementById('darkMode'); function applyDark(v){ if(v){ document.documentElement.style.setProperty('--bg','#071024'); document.body.classList.add('dark'); localStorage.setItem('__dark','1'); } else { document.documentElement.style.removeProperty('--bg'); document.body.classList.remove('dark'); localStorage.removeItem('__dark'); }} if(localStorage.getItem('__dark')){ darkToggle.checked=true; applyDark(true); } darkToggle.addEventListener('change',(e)=> applyDark(e.target.checked));
-
-  })();
-  </script>
+/* ======================
+   INICIALIZACIÓN
+   ====================== */
+document.addEventListener('DOMContentLoaded', async function() {
+  console.log('🚀 Inicializando gestión de clientes...');
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  const sessionUser = JSON.parse(localStorage.getItem('sessionUser') || '{}');
+  const user = currentUser.nombre ? currentUser : sessionUser;
+  if (user.nombre) {
+    document.getElementById('sidebarUserName').textContent = user.nombre;
+  }
+  await loadClientes();
+  setupSearch();
+});
+</script>
 </body>
 </html>
