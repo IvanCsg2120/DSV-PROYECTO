@@ -1,0 +1,715 @@
+/* ==========================================
+   NEXUS PRO - MÓDULO DE CLIENTES
+   Diseño Premium Integrado
+========================================== */
+
+:root {
+  /* Paleta Verde Premium */
+  --rich-black: #0F1419;
+  --dark-green: #1A2421;
+  --bangladesh-green: #03624C;
+  --mountain-meadow: #22CA95;
+  --caribbean-green: #00D391;
+  --anti-flash-white: #F1F2F2;
+  --pine: #0D1815;
+  --forest: #025544;
+  --mint: #74E8BC;
+  --stone: #707D7D;
+  --pistachio: #A0CC64;
+  
+  /* Colores complementarios */
+  --rojo: #E74C3C;
+  --amarillo: #F39C12;
+  --morado: #9B59B6;
+  --cyan: #3498DB;
+}
+
+/* ==========================================
+   CONTENEDOR DE CLIENTES
+========================================== */
+.clientes-container {
+  padding: 0;
+  background: transparent;
+}
+
+.clientes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: var(--rich-black);
+  border-radius: 16px;
+  border: 1px solid rgba(34, 202, 149, 0.1);
+}
+
+.clientes-title h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--anti-flash-white);
+  margin-bottom: 0.5rem;
+}
+
+.clientes-title p {
+  font-size: 14px;
+  color: var(--stone);
+}
+
+.clientes-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* ==========================================
+   TARJETA DE CLIENTES
+========================================== */
+.clientes-card {
+  background: var(--rich-black);
+  border: 1px solid rgba(34, 202, 149, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* ==========================================
+   FORMULARIO DE CLIENTES
+========================================== */
+.clientes-form {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--anti-flash-white);
+}
+
+.form-toggle {
+  background: rgba(34, 202, 149, 0.1);
+  border: 1px solid var(--mountain-meadow);
+  color: var(--mountain-meadow);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.form-toggle:hover {
+  background: var(--mountain-meadow);
+  color: white;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--anti-flash-white);
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  color: var(--anti-flash-white);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--mountain-meadow);
+  box-shadow: 0 0 0 3px rgba(34, 202, 149, 0.1);
+}
+
+.form-group input::placeholder {
+  color: var(--stone);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+/* ==========================================
+   BOTONES
+========================================== */
+.btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--mountain-meadow), var(--caribbean-green));
+  color: white;
+  box-shadow: 0 4px 12px rgba(34, 202, 149, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 202, 149, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--anti-flash-white);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--mountain-meadow);
+}
+
+.btn-danger {
+  background: rgba(231, 76, 60, 0.1);
+  color: var(--rojo);
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.btn-danger:hover {
+  background: var(--rojo);
+  color: white;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--stone);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--anti-flash-white);
+  border-color: var(--mountain-meadow);
+}
+
+/* ==========================================
+   BARRA DE BÚSQUEDA Y FILTROS
+========================================== */
+.search-filters {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.8rem 1rem 0.8rem 3rem;
+  color: var(--anti-flash-white);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--mountain-meadow);
+  box-shadow: 0 0 0 3px rgba(34, 202, 149, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--stone);
+}
+
+.filter-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.filter-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  color: var(--anti-flash-white);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--mountain-meadow);
+}
+
+/* ==========================================
+   TABLA DE CLIENTES
+========================================== */
+.clientes-table-container {
+  background: var(--rich-black);
+  border: 1px solid rgba(34, 202, 149, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--anti-flash-white);
+}
+
+.table-stats {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.stat-badge {
+  background: rgba(34, 202, 149, 0.15);
+  color: var(--mountain-meadow);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.clientes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.clientes-table th {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--stone);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.clientes-table td {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 14px;
+  color: var(--anti-flash-white);
+}
+
+.clientes-table tbody tr {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.clientes-table tbody tr:hover {
+  background: rgba(34, 202, 149, 0.05);
+}
+
+.clientes-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Estados de cliente */
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background: rgba(34, 202, 149, 0.15);
+  color: var(--mountain-meadow);
+}
+
+.status-inactive {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--stone);
+}
+
+/* Acciones de tabla */
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.edit-btn {
+  background: rgba(52, 152, 219, 0.1);
+  color: var(--cyan);
+}
+
+.edit-btn:hover {
+  background: var(--cyan);
+  color: white;
+}
+
+.delete-btn {
+  background: rgba(231, 76, 60, 0.1);
+  color: var(--rojo);
+}
+
+.delete-btn:hover {
+  background: var(--rojo);
+  color: white;
+}
+
+/* ==========================================
+   TARJETAS DE CLIENTES (VISTA ALTERNATIVA)
+========================================== */
+.clientes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.cliente-card {
+  background: var(--rich-black);
+  border: 1px solid rgba(34, 202, 149, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.cliente-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--mountain-meadow);
+  box-shadow: 0 8px 24px rgba(34, 202, 149, 0.2);
+}
+
+.cliente-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.cliente-avatar {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--mountain-meadow), var(--caribbean-green));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.cliente-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cliente-info h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--anti-flash-white);
+  margin-bottom: 0.5rem;
+}
+
+.cliente-email {
+  font-size: 13px;
+  color: var(--stone);
+  margin-bottom: 0.3rem;
+}
+
+.cliente-phone {
+  font-size: 13px;
+  color: var(--stone);
+}
+
+.cliente-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cliente-date {
+  font-size: 12px;
+  color: var(--stone);
+}
+
+/* ==========================================
+   MODAL DE EDICIÓN
+========================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.modal-content {
+  background: var(--rich-black);
+  border: 1px solid rgba(34, 202, 149, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--anti-flash-white);
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  color: var(--stone);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+  color: var(--rojo);
+}
+
+/* ==========================================
+   TOAST NOTIFICATIONS
+========================================== */
+.toast-container {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1001;
+}
+
+.toast {
+  background: var(--rich-black);
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+.toast-success {
+  border-color: var(--mountain-meadow);
+  background: rgba(34, 202, 149, 0.1);
+}
+
+.toast-error {
+  border-color: var(--rojo);
+  background: rgba(231, 76, 60, 0.1);
+}
+
+.toast-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.toast-success .toast-icon {
+  background: var(--mountain-meadow);
+  color: white;
+}
+
+.toast-error .toast-icon {
+  background: var(--rojo);
+  color: white;
+}
+
+.toast-message {
+  flex: 1;
+  color: var(--anti-flash-white);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+@media (max-width: 768px) {
+  .clientes-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .clientes-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .search-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-box {
+    min-width: 100%;
+  }
+  
+  .filter-group {
+    justify-content: space-between;
+  }
+  
+  .clientes-table {
+    font-size: 12px;
+  }
+  
+  .clientes-table th,
+  .clientes-table td {
+    padding: 0.8rem 1rem;
+  }
+  
+  .actions-cell {
+    flex-direction: column;
+  }
+  
+  .clientes-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .clientes-title h1 {
+    font-size: 22px;
+  }
+  
+  .btn {
+    padding: 0.7rem 1rem;
+    font-size: 13px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .table-stats {
+    align-self: flex-end;
+  }
+}
