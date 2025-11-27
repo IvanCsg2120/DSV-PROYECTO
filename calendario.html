@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calendario — Nexus Pro</title>
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/calendario.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- ==========================================
+       SIDEBAR LATERAL CON LOGO Y NAVEGACIÓN
+  ========================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-header" onclick="irAlInicio()" title="Ir al Inicio">
+      <div class="sidebar-logo">
+        <img src="img/logo.png" alt="Nexus Pro Logo" class="logo-sidebar">
+      </div>
+      <div class="sidebar-title">
+        <h2>Nexus Pro</h2>
+        <p>v.0.2.34</p>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <img src="https://ui-avatars.com/api/?name=Juan+Sanchez&background=22CA95&color=fff&bold=true" 
+           alt="Usuario" class="user-avatar-sidebar">
+      <div class="user-info-sidebar">
+        <h3 id="sidebarUserName">Juan Sánchez</h3>
+        <p id="sidebarUserRole">Administrador</p>
+      </div>
+      <div class="add-btn" title="Nuevo" onclick="openNewEventModal()">
+        <i class="fas fa-plus"></i>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Módulos</div>
+      <a href="clientes.html" class="nav-item">
+        <i class="fas fa-users"></i>
+        <span>Clientes</span>
+        <span class="nav-badge" id="navBadgeClientes">24</span>
+      </a>
+      <a href="servicios.html" class="nav-item">
+        <i class="fas fa-cogs"></i>
+        <span>Servicios</span>
+        <span class="nav-badge" id="navBadgeServicios">15</span>
+      </a>
+      <a href="cotizaciones.html" class="nav-item">
+        <i class="fas fa-file-contract"></i>
+        <span>Cotizaciones</span>
+        <span class="nav-badge" id="navBadgeCotizaciones">32</span>
+      </a>
+      <a href="facturacion.html" class="nav-item">
+        <i class="fas fa-file-invoice"></i>
+        <span>Facturación</span>
+      </a>
+      <a href="calendario.html" class="nav-item active">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Calendario</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="version-info">
+        <div class="version-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <div class="version-text">
+          <h4>NexusCaster</h4>
+          <p>ver. 0.2.34</p>
+        </div>
+        <button class="version-menu">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       CONTENIDO PRINCIPAL
+  ========================================== -->
+  <main class="main-wrapper">
+    <header class="content-topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar eventos..." id="searchInput">
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="topbar-actions">
+          <button class="action-btn" title="Notificaciones" onclick="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="action-badge">3</span>
+          </button>
+          <button class="action-btn" title="Mensajes" onclick="toggleMessages()">
+            <i class="fas fa-envelope"></i>
+            <span class="action-badge">5</span>
+          </button>
+          <button class="action-btn" title="Configuración" onclick="window.location.href='settings.html'">
+            <i class="fas fa-cog"></i>
+          </button>
+        </div>
+        
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Contenido del Calendario -->
+    <div class="calendario-container">
+      <div class="calendario-header">
+        <div class="calendario-title">
+          <h1>Calendario</h1>
+          <p>Gestiona tus citas, reuniones y eventos</p>
+        </div>
+        
+        <div class="calendario-controls">
+          <div class="calendario-nav">
+            <button class="nav-btn" onclick="cambiarMes(-1)">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="nav-btn" onclick="hoy()">
+              <i class="fas fa-circle"></i>
+            </button>
+            <button class="nav-btn" onclick="cambiarMes(1)">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          
+          <div class="fecha-actual" id="fechaActual">
+            Noviembre 2023
+          </div>
+          
+          <div class="calendario-vistas">
+            <button class="vista-btn active" onclick="cambiarVista('mes')">
+              <i class="fas fa-calendar-alt"></i> Mes
+            </button>
+            <button class="vista-btn" onclick="cambiarVista('semana')">
+              <i class="fas fa-calendar-week"></i> Semana
+            </button>
+            <button class="vista-btn" onclick="cambiarVista('dia')">
+              <i class="fas fa-calendar-day"></i> Día
+            </button>
+          </div>
+          
+          <button class="btn-nuevo-evento" onclick="abrirModalEvento()">
+            <i class="fas fa-plus"></i>
+            Nuevo Evento
+          </button>
+        </div>
+      </div>
+
+      <!-- Vista Mensual -->
+      <div class="calendario-mes" id="vistaMes">
+        <div class="dias-semana">
+          <div class="dia-semana">Dom</div>
+          <div class="dia-semana">Lun</div>
+          <div class="dia-semana">Mar</div>
+          <div class="dia-semana">Mié</div>
+          <div class="dia-semana">Jue</div>
+          <div class="dia-semana">Vie</div>
+          <div class="dia-semana">Sáb</div>
+        </div>
+        <div class="dias-mes" id="diasMes">
+          <!-- Los días se generan dinámicamente con JavaScript -->
+        </div>
+      </div>
+
+      <!-- Vista Semanal -->
+      <div class="calendario-semana" id="vistaSemana">
+        <div class="semana-header">
+          <div class="hora-vacia"></div>
+          <div class="dias-semana-semana">
+            <!-- Los días de la semana se generan dinámicamente -->
+          </div>
+        </div>
+        <div class="horas-dias" id="horasDias">
+          <!-- Las horas y eventos se generan dinámicamente -->
+        </div>
+      </div>
+
+      <!-- Vista Diaria -->
+      <div class="calendario-dia" id="vistaDia">
+        <div class="dia-header">
+          <div class="hora-vacia"></div>
+          <div class="fecha-dia" id="fechaDia">
+            <!-- La fecha del día se genera dinámicamente -->
+          </div>
+        </div>
+        <div class="horas-dia" id="horasDia">
+          <!-- Las horas y eventos se generan dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal para crear/editar eventos -->
+  <div id="modalEvento" class="modal-overlay">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h3 id="modalTitulo">Nuevo Evento</h3>
+        <button class="btn-cerrar-modal" onclick="cerrarModalEvento()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <form id="formEvento" class="form-evento">
+        <input type="hidden" id="eventoId">
+        
+        <div class="form-group">
+          <label for="eventoTitulo">Título del evento *</label>
+          <input type="text" id="eventoTitulo" required placeholder="Reunión con cliente">
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="eventoFechaInicio">Fecha inicio *</label>
+            <input type="date" id="eventoFechaInicio" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="eventoHoraInicio">Hora inicio</label>
+            <input type="time" id="eventoHoraInicio">
+          </div>
+          
+          <div class="form-group">
+            <label for="eventoFechaFin">Fecha fin *</label>
+            <input type="date" id="eventoFechaFin" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="eventoHoraFin">Hora fin</label>
+            <input type="time" id="eventoHoraFin">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="eventoTipo">Tipo de evento</label>
+          <select id="eventoTipo">
+            <option value="cita">Cita</option>
+            <option value="reunion">Reunión</option>
+            <option value="recordatorio">Recordatorio</option>
+            <option value="entrega">Entrega</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="eventoDescripcion">Descripción</label>
+          <textarea id="eventoDescripcion" rows="3" placeholder="Descripción del evento..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="eventoCliente">Cliente (opcional)</label>
+          <select id="eventoCliente">
+            <option value="">Seleccionar cliente</option>
+          </select>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" onclick="cerrarModalEvento()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Guardar Evento
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para ver detalles del evento -->
+  <div id="modalDetalleEvento" class="modal-overlay">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h3 id="detalleTitulo">Detalles del Evento</h3>
+        <button class="btn-cerrar-modal" onclick="cerrarModalDetalle()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="detalle-evento">
+        <div class="detalle-info">
+          <div class="detalle-item">
+            <span class="detalle-label">Fecha y hora:</span>
+            <span id="detalleFechaHora"></span>
+          </div>
+          <div class="detalle-item">
+            <span class="detalle-label">Tipo:</span>
+            <span id="detalleTipo"></span>
+          </div>
+          <div class="detalle-item">
+            <span class="detalle-label">Cliente:</span>
+            <span id="detalleCliente"></span>
+          </div>
+          <div class="detalle-item">
+            <span class="detalle-label">Descripción:</span>
+            <span id="detalleDescripcion"></span>
+          </div>
+        </div>
+        
+        <div class="detalle-actions">
+          <button class="btn btn-secondary" onclick="editarEvento()">
+            <i class="fas fa-edit"></i> Editar
+          </button>
+          <button class="btn btn-danger" onclick="eliminarEvento()">
+            <i class="fas fa-trash"></i> Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/calendario.js"></script>
+</body>
+</html>
