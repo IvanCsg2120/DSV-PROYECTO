@@ -1096,3 +1096,84 @@ body {
   height: 26px !important;
   border-radius: 4px !important;
 }
+/* ==========================================
+   ESTILOS COMPARTIDOS PARA EL CALENDARIO
+========================================== */
+
+/* Estilos para badges de navegación */
+.nav-badge {
+    background: var(--mountain-meadow);
+    color: var(--rich-black);
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Estados de elementos de navegación */
+.nav-item.active {
+    background: rgba(34, 202, 149, 0.2);
+    color: var(--mountain-meadow);
+    border-left-color: var(--mountain-meadow);
+}
+
+.nav-item:hover {
+    background: rgba(34, 202, 149, 0.1);
+    color: var(--mountain-meadow);
+}
+
+/* Botones de acción */
+.action-btn {
+    position: relative;
+    background: var(--dark-green);
+    border: 1px solid var(--forest);
+    color: var(--anti-flash-white);
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--rojo);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive para el calendario */
+@media (max-width: 768px) {
+    .calendario-container {
+        padding: 1rem;
+    }
+    
+    .calendario-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .calendario-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .calendario-vistas {
+        order: -1;
+        width: 100%;
+        justify-content: center;
+    }
+}
