@@ -3,24 +3,380 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nexus- Panel de Control Empresarial</title>
+  <title>Nexus - Panel de Control Empresarial</title>
   <meta name="description" content="Dashboard profesional para gestión empresarial">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/dashboard.css" />
+  
+  <style>
+    /* ==========================================
+       FONDO NEGRO PARA TODO EL DASHBOARD
+    ========================================== */
+    body {
+      background-color: #0a0a0a !important;
+      color: #ffffff;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    /* ==========================================
+       SIDEBAR CON FONDO NEGRO
+    ========================================== */
+    .sidebar {
+      background: linear-gradient(180deg, #111111 0%, #0a0a0a 100%);
+      border-right: 1px solid #333333;
+    }
+
+    .sidebar-header {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid #333333;
+      padding: 1.5rem;
+    }
+
+    .sidebar-header:hover {
+      background: rgba(34, 202, 149, 0.1);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #22CA95, #00D391);
+      flex-shrink: 0;
+      padding: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .logo-sidebar {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .sidebar-title h2 {
+      color: #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-title p {
+      color: #888888;
+    }
+
+    /* ==========================================
+       CONTENIDO PRINCIPAL CON FONDO NEGRO
+    ========================================== */
+    .main-wrapper {
+      background: #0a0a0a;
+    }
+
+    .content-topbar {
+      background: rgba(17, 17, 17, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #333333;
+    }
+
+    .search-bar {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+    }
+
+    .search-bar input {
+      background: transparent;
+      color: #ffffff;
+    }
+
+    .search-bar input::placeholder {
+      color: #666666;
+    }
+
+    .action-btn {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      color: #ffffff;
+    }
+
+    .action-btn:hover {
+      background: #22CA95;
+      border-color: #22CA95;
+    }
+
+    .logout-btn {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      color: #ffffff;
+    }
+
+    .logout-btn:hover {
+      background: #dc3545;
+      border-color: #dc3545;
+    }
+
+    /* ==========================================
+       CARDS Y SECCIONES CON FONDO OSCURO
+    ========================================== */
+    .welcome-header {
+      background: transparent;
+    }
+
+    .kpi-card {
+      background: linear-gradient(135deg, #1a1a1a 0%, #111111 100%);
+      border: 1px solid #333333;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .kpi-card:hover {
+      border-color: #22CA95;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(34, 202, 149, 0.2);
+    }
+
+    .kpi-label {
+      color: #cccccc;
+    }
+
+    .kpi-value {
+      color: #ffffff;
+    }
+
+    .kpi-change {
+      color: #888888;
+    }
+
+    .chart-section,
+    .satisfaction-section,
+    .projects-section {
+      background: linear-gradient(135deg, #1a1a1a 0%, #111111 100%);
+      border: 1px solid #333333;
+      border-radius: 12px;
+    }
+
+    .section-header h3 {
+      color: #ffffff;
+    }
+
+    .section-subtitle {
+      color: #cccccc;
+    }
+
+    .chart-period {
+      background: #333333;
+      color: #ffffff;
+    }
+
+    .chart-period.active {
+      background: #22CA95;
+      color: #000000;
+    }
+
+    /* ==========================================
+       TABLA DE PROYECTOS
+    ========================================== */
+    .project-row {
+      border-bottom: 1px solid #333333;
+    }
+
+    .project-row:hover {
+      background: rgba(34, 202, 149, 0.1);
+    }
+
+    .project-info h4 {
+      color: #ffffff;
+    }
+
+    .project-info p {
+      color: #888888;
+    }
+
+    .stat-value {
+      color: #ffffff;
+    }
+
+    .stat-badge.live {
+      background: #22CA95;
+      color: #000000;
+    }
+
+    /* ==========================================
+       BANNER DE WEBINAR
+    ========================================== */
+    .webinar-banner {
+      background: linear-gradient(135deg, #1a1a1a 0%, #111111 100%);
+      border: 1px solid #333333;
+    }
+
+    .webinar-badge {
+      background: #22CA95;
+      color: #000000;
+    }
+
+    .webinar-content h2 {
+      color: #ffffff;
+    }
+
+    .webinar-content p {
+      color: #cccccc;
+    }
+
+    .btn-webinar {
+      background: #22CA95;
+      color: #000000;
+    }
+
+    .btn-webinar:hover {
+      background: #00D391;
+    }
+
+    .webinar-icon {
+      background: rgba(34, 202, 149, 0.1);
+      color: #22CA95;
+    }
+
+    /* ==========================================
+       BOTONES
+    ========================================== */
+    .btn-primary {
+      background: linear-gradient(135deg, #22CA95, #00D391);
+      color: #000000;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #00D391, #22CA95);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(34, 202, 149, 0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #22CA95;
+      border: 2px solid #22CA95;
+    }
+
+    .btn-secondary:hover {
+      background: #22CA95;
+      color: #000000;
+    }
+
+    /* ==========================================
+       NAV ITEMS Y BADGES
+    ========================================== */
+    .nav-item {
+      color: #cccccc;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-item:hover {
+      background: rgba(34, 202, 149, 0.1);
+      color: #22CA95;
+      border-left-color: #22CA95;
+    }
+
+    .nav-item.active {
+      background: rgba(34, 202, 149, 0.2);
+      color: #22CA95;
+      border-left-color: #22CA95;
+    }
+
+    .nav-badge {
+      background: #22CA95;
+      color: #000000;
+    }
+
+    .action-badge {
+      background: #dc3545;
+      color: #ffffff;
+    }
+
+    /* ==========================================
+       TENDENCIAS Y INDICADORES
+    ========================================== */
+    .kpi-trend.positive {
+      color: #22CA95;
+    }
+
+    .kpi-trend.negative {
+      color: #dc3545;
+    }
+
+    .trend-indicator.positive {
+      color: #22CA95;
+    }
+
+    /* ==========================================
+       GRÁFICO DE SATISFACCIÓN
+    ========================================== */
+    .gauge-circle circle:first-child {
+      stroke: #333333;
+    }
+
+    .gauge-circle circle:last-child {
+      stroke: #22CA95;
+    }
+
+    .gauge-percentage {
+      color: #ffffff;
+    }
+
+    .gauge-legend span {
+      color: #888888;
+    }
+
+    .legend-text {
+      color: #cccccc;
+    }
+
+    /* ==========================================
+       ANIMACIONES Y TRANSICIONES
+    ========================================== */
+    .sidebar-header,
+    .nav-item,
+    .kpi-card,
+    .project-row,
+    .btn-primary,
+    .btn-secondary,
+    .action-btn,
+    .logout-btn {
+      transition: all 0.3s ease;
+    }
+
+    /* ==========================================
+       RESPONSIVE
+    ========================================== */
+    @media (max-width: 768px) {
+      .sidebar {
+        background: #111111;
+      }
+      
+      .sidebar-logo {
+        width: 36px;
+        height: 36px;
+      }
+      
+      .logo-sidebar {
+        width: 28px;
+        height: 28px;
+      }
+    }
+  </style>
 </head>
 <body>
   
   <!-- ==========================================
-       SIDEBAR LATERAL
+       SIDEBAR LATERAL CON LOGO
   ========================================== -->
   <aside class="sidebar">
-    <!-- Header del Sidebar -->
-    <div class="sidebar-header">
+    <!-- Header del Sidebar CON LOGO -->
+    <div class="sidebar-header" onclick="irAlInicio()" title="Ir al Inicio">
       <div class="sidebar-logo">
-        <i class="fas fa-cube"></i>
+        <!-- TU LOGO AQUÍ -->
+        <img src="img/logo.png" alt="Nexus  Logo" class="logo-sidebar">
       </div>
       <div class="sidebar-title">
-        <h2>Nexus Pro</h2>
+        <h2>Nexus </h2>
         <p>v.0.2.34</p>
       </div>
     </div>
@@ -38,34 +394,33 @@
       </div>
     </div>
 
-      <!-- Sección Módulos -->
-      <div class="nav-section">
-        <div class="nav-section-title">Módulos</div>
-        <a href="clientes.html" class="nav-item">
-          <i class="fas fa-users"></i>
-          <span>Clientes</span>
-          <span class="nav-badge" id="navBadgeClientes">24</span>
-        </a>
-        <a href="servicios.html" class="nav-item">
-          <i class="fas fa-cogs"></i>
-          <span>Servicios</span>
-          <span class="nav-badge" id="navBadgeServicios">15</span>
-        </a>
-        <a href="cotizaciones.html" class="nav-item">
-          <i class="fas fa-file-contract"></i>
-          <span>Cotizaciones</span>
-          <span class="nav-badge" id="navBadgeCotizaciones">32</span>
-        </a>
-        <a href="facturacion.html" class="nav-item">
-          <i class="fas fa-file-invoice"></i>
-          <span>Facturación</span>
-        </a>
-        <a href="calendario.html" class="nav-item">
-          <i class="fas fa-calendar-alt"></i>
-          <span>Calendario</span>
-        </a>
-      </div>
-
+    <!-- Sección Módulos -->
+    <div class="nav-section">
+      <div class="nav-section-title">Módulos</div>
+      <a href="clientes.html" class="nav-item">
+        <i class="fas fa-users"></i>
+        <span>Clientes</span>
+        <span class="nav-badge" id="navBadgeClientes">24</span>
+      </a>
+      <a href="servicios.html" class="nav-item">
+        <i class="fas fa-cogs"></i>
+        <span>Servicios</span>
+        <span class="nav-badge" id="navBadgeServicios">15</span>
+      </a>
+      <a href="cotizaciones.html" class="nav-item">
+        <i class="fas fa-file-contract"></i>
+        <span>Cotizaciones</span>
+        <span class="nav-badge" id="navBadgeCotizaciones">32</span>
+      </a>
+      <a href="facturacion.html" class="nav-item">
+        <i class="fas fa-file-invoice"></i>
+        <span>Facturación</span>
+      </a>
+      <a href="calendario.html" class="nav-item">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Calendario</span>
+      </a>
+    </div>
 
     <!-- Footer del Sidebar -->
     <div class="sidebar-footer">
@@ -103,7 +458,7 @@
 
       <div class="topbar-right">
         <div class="topbar-actions">
-          <button class="action-btn" title="Notificaciones" onclick="toggleNotifications()">
+           <button class="action-btn" title="Notificaciones" onclick="window.location.href='notificaciones.html'">
             <i class="fas fa-bell"></i>
             <span class="action-badge">3</span>
           </button>
@@ -147,7 +502,7 @@
       <section class="kpi-section">
         <div class="kpi-grid">
           <!-- KPI 1: Clientes -->
-          <div class="kpi-card" onclick="window.location.href='clientes.html'">
+          <div class="kpi-card" onclick="navegarConAnimacion('clientes.html')">
             <div class="kpi-header">
               <span class="kpi-label">Clientes Activos</span>
               <div class="kpi-trend positive">
@@ -162,7 +517,7 @@
           </div>
 
           <!-- KPI 2: Servicios -->
-          <div class="kpi-card" onclick="window.location.href='servicios.html'">
+          <div class="kpi-card" onclick="navegarConAnimacion('servicios.html')">
             <div class="kpi-header">
               <span class="kpi-label">Servicios</span>
               <div class="kpi-trend positive">
@@ -177,7 +532,7 @@
           </div>
 
           <!-- KPI 3: Cotizaciones -->
-          <div class="kpi-card" onclick="window.location.href='cotizaciones.html'">
+          <div class="kpi-card" onclick="navegarConAnimacion('cotizaciones.html')">
             <div class="kpi-header">
               <span class="kpi-label">Cotizaciones</span>
               <div class="kpi-trend negative">
@@ -192,7 +547,7 @@
           </div>
 
           <!-- KPI 4: Ingresos -->
-          <div class="kpi-card" onclick="window.location.href='finanzas.html'">
+          <div class="kpi-card" onclick="navegarConAnimacion('finanzas.html')">
             <div class="kpi-header">
               <span class="kpi-label">Ingresos del Mes</span>
               <div class="kpi-trend positive">
@@ -240,7 +595,7 @@
           <div class="satisfaction-gauge">
             <div class="gauge-circle">
               <svg viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="#2a2e33" stroke-width="8"></circle>
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#333333" stroke-width="8"></circle>
                 <circle cx="50" cy="50" r="45" fill="none" stroke="#22CA95" stroke-width="8" 
                         stroke-dasharray="283" stroke-dashoffset="70" 
                         stroke-linecap="round" transform="rotate(-90 50 50)"></circle>
@@ -327,7 +682,78 @@
   <script src="js/auth.js"></script>
 
   <script>
-    // Inicialización
+    // ==========================================
+    // FUNCIONES DE ANIMACIÓN Y NAVEGACIÓN
+    // ==========================================
+
+    // Función para navegar con animación
+    function navegarConAnimacion(url) {
+        const mainContent = document.querySelector('.dashboard-content') || document.querySelector('.main-wrapper');
+        
+        if (mainContent) {
+            // Mostrar loader
+            mostrarLoader();
+            
+            // Agregar clase de animación de salida
+            mainContent.classList.add('page-exit');
+            
+            // Esperar a que termine la animación de salida antes de navegar
+            setTimeout(() => {
+                document.body.classList.add('animating');
+                window.location.href = url;
+            }, 400);
+        } else {
+            // Fallback: navegación normal sin animación
+            window.location.href = url;
+        }
+    }
+
+    // Función para mostrar loader
+    function mostrarLoader() {
+        let loader = document.getElementById('pageLoader');
+        if (!loader) {
+            loader = document.createElement('div');
+            loader.id = 'pageLoader';
+            loader.className = 'page-loader';
+            loader.innerHTML = `
+                <div class="loader-spinner"></div>
+                <div class="loader-text">Cargando...</div>
+            `;
+            document.body.appendChild(loader);
+        }
+        
+        setTimeout(() => {
+            loader.classList.add('active');
+        }, 10);
+    }
+
+    // Función para ir al inicio con animación
+    function irAlInicio() {
+        navegarConAnimacion('dashboard.html');
+    }
+
+    // Configurar navegación en el sidebar
+    function configurarNavegacionSidebar() {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (this.href && !this.classList.contains('active')) {
+                    e.preventDefault();
+                    const url = this.href;
+                    
+                    // Agregar clase activa visualmente
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Navegar con animación
+                    navegarConAnimacion(url);
+                }
+            });
+        });
+    }
+
+    // ==========================================
+    // INICIALIZACIÓN
+    // ==========================================
     (function init() {
       const s = localStorage.getItem("sessionUser");
       if (!s) { 
@@ -340,6 +766,9 @@
       // Actualizar información del usuario en sidebar
       document.getElementById("sidebarUserName").textContent = user.nombre || "Usuario";
       document.getElementById("sidebarUserRole").textContent = user.rol || "Administrador";
+
+      // Configurar navegación del sidebar
+      configurarNavegacionSidebar();
 
       // Saludo dinámico
       const hora = new Date().getHours();
@@ -411,19 +840,92 @@
     }
 
     function toggleNotifications() {
-      alert("Panel de notificaciones - En desarrollo");
+      // Mostrar notificación en lugar de alert
+      const notificacion = document.createElement('div');
+      notificacion.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #22CA95;
+          color: #000000;
+          padding: 16px 24px;
+          border-radius: 12px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          z-index: 1001;
+          font-weight: 600;
+      `;
+      notificacion.innerHTML = '<i class="fas fa-bell"></i> No hay nuevas notificaciones';
+      document.body.appendChild(notificacion);
+      
+      setTimeout(() => {
+          document.body.removeChild(notificacion);
+      }, 3000);
     }
 
     function toggleMessages() {
-      alert("Panel de mensajes - En desarrollo");
+      const notificacion = document.createElement('div');
+      notificacion.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #22CA95;
+          color: #000000;
+          padding: 16px 24px;
+          border-radius: 12px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          z-index: 1001;
+          font-weight: 600;
+      `;
+      notificacion.innerHTML = '<i class="fas fa-envelope"></i> Sistema de mensajes en desarrollo';
+      document.body.appendChild(notificacion);
+      
+      setTimeout(() => {
+          document.body.removeChild(notificacion);
+      }, 3000);
     }
 
     function openNewProjectModal() {
-      alert("Modal de nuevo proyecto - En desarrollo");
+      const notificacion = document.createElement('div');
+      notificacion.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #22CA95;
+          color: #000000;
+          padding: 16px 24px;
+          border-radius: 12px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          z-index: 1001;
+          font-weight: 600;
+      `;
+      notificacion.innerHTML = '<i class="fas fa-plus"></i> Función de nuevo proyecto en desarrollo';
+      document.body.appendChild(notificacion);
+      
+      setTimeout(() => {
+          document.body.removeChild(notificacion);
+      }, 3000);
     }
 
     function exportReport() {
-      alert("Exportando reporte... - En desarrollo");
+      const notificacion = document.createElement('div');
+      notificacion.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #22CA95;
+          color: #000000;
+          padding: 16px 24px;
+          border-radius: 12px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          z-index: 1001;
+          font-weight: 600;
+      `;
+      notificacion.innerHTML = '<i class="fas fa-download"></i> Exportando reporte...';
+      document.body.appendChild(notificacion);
+      
+      setTimeout(() => {
+          document.body.removeChild(notificacion);
+      }, 3000);
     }
 
     // Búsqueda
@@ -431,22 +933,28 @@
       if (e.key === "Enter") {
         const query = this.value.trim();
         if (query) {
-          alert(`Buscando: "${query}" - En desarrollo`);
+          const notificacion = document.createElement('div');
+          notificacion.style.cssText = `
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              background: #22CA95;
+              color: #000000;
+              padding: 16px 24px;
+              border-radius: 12px;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+              z-index: 1001;
+              font-weight: 600;
+          `;
+          notificacion.innerHTML = `<i class="fas fa-search"></i> Buscando: "${query}"`;
+          document.body.appendChild(notificacion);
+          
+          setTimeout(() => {
+              document.body.removeChild(notificacion);
+          }, 3000);
         }
       }
-    });
-
-    // Navegación activa
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', function(e) {
-        if (!this.href) {
-          document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-          this.classList.add('active');
-        }
-      });
     });
   </script>
 </body>
 </html>
-
-
