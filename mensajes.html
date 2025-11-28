@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mensajes — Nexus Pro</title>
+  <link rel="stylesheet" href="css/mensajes.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- SIDEBAR LATERAL -->
+  <aside class="sidebar">
+    <div class="sidebar-header" onclick="irAlInicio()" title="Ir al Inicio">
+      <div class="sidebar-logo">
+        <i class="fas fa-cube"></i>
+      </div>
+      <div class="sidebar-title">
+        <h2>Nexus Pro</h2>
+        <p>v.0.2.34</p>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <img src="https://ui-avatars.com/api/?name=Ivan+Coronado&background=22CA95&color=fff&bold=true" 
+           alt="Usuario" class="user-avatar-sidebar">
+      <div class="user-info-sidebar">
+        <h3 id="sidebarUserName">Ivan Coronado</h3>
+        <p id="sidebarUserRole">Administrador</p>
+      </div>
+      <div class="add-btn" title="Nuevo mensaje" onclick="abrirModalNuevoMensaje()">
+        <i class="fas fa-plus"></i>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">MÓDULOS</div>
+      <a href="clientes.html" class="nav-item">
+        <i class="fas fa-users"></i>
+        <span>Clientes</span>
+        <span class="nav-badge" id="navBadgeClientes">24</span>
+      </a>
+      <a href="servicios.html" class="nav-item">
+        <i class="fas fa-cogs"></i>
+        <span>Servicios</span>
+        <span class="nav-badge" id="navBadgeServicios">15</span>
+      </a>
+      <a href="cotizaciones.html" class="nav-item">
+        <i class="fas fa-file-contract"></i>
+        <span>Cotizaciones</span>
+        <span class="nav-badge" id="navBadgeCotizaciones">32</span>
+      </a>
+      <a href="facturacion.html" class="nav-item">
+        <i class="fas fa-file-invoice"></i>
+        <span>Facturación</span>
+      </a>
+      <a href="calendario.html" class="nav-item">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Calendario</span>
+      </a>
+      <a href="mensajes.html" class="nav-item active">
+        <i class="fas fa-envelope"></i>
+        <span>Mensajes</span>
+        <span class="nav-badge" id="navBadgeMensajes">5</span>
+      </a>
+      <a href="notificaciones.html" class="nav-item">
+        <i class="fas fa-bell"></i>
+        <span>Notificaciones</span>
+        <span class="nav-badge" id="navBadgeNotificaciones">3</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="version-info">
+        <div class="version-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <div class="version-text">
+          <h4>NexusCaster</h4>
+          <p>ver. 0.2.34</p>
+        </div>
+        <button class="version-menu">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-wrapper">
+    <header class="content-topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar mensajes..." id="searchInput">
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="topbar-actions">
+          <button class="action-btn" title="Notificaciones" onclick="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="action-badge">3</span>
+          </button>
+          <button class="action-btn" title="Mensajes">
+            <i class="fas fa-envelope"></i>
+            <span class="action-badge">5</span>
+          </button>
+          <button class="action-btn" title="Configuración" onclick="window.location.href='settings.html'">
+            <i class="fas fa-cog"></i>
+          </button>
+        </div>
+        
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Contenido de Mensajes -->
+    <div class="mensajes-container">
+      <div class="mensajes-header">
+        <div class="mensajes-title">
+          <h1>Mensajes</h1>
+          <p>Comunícate con clientes y equipo</p>
+        </div>
+        
+        <div class="mensajes-controls">
+          <button class="btn btn-secondary" onclick="marcarTodosComoLeidos()">
+            <i class="fas fa-check-double"></i>
+            Marcar todos como leídos
+          </button>
+          <button class="btn btn-primary" onclick="abrirModalNuevoMensaje()">
+            <i class="fas fa-plus"></i>
+            Nuevo Mensaje
+          </button>
+        </div>
+      </div>
+
+      <!-- Layout de Mensajes -->
+      <div class="mensajes-layout">
+        <!-- Lista de Conversaciones -->
+        <div class="conversaciones-panel">
+          <div class="conversaciones-header">
+            <h3>Conversaciones</h3>
+            <div class="conversaciones-filtros">
+              <select id="filtroConversaciones" onchange="filtrarConversaciones()">
+                <option value="todas">Todas</option>
+                <option value="no-leidas">No leídas</option>
+                <option value="clientes">Clientes</option>
+                <option value="equipo">Equipo</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="conversaciones-lista" id="listaConversaciones">
+            <!-- Se cargan dinámicamente con JS -->
+          </div>
+        </div>
+
+        <!-- Panel de Mensajes -->
+        <div class="mensajes-panel">
+          <div class="mensajes-vacio" id="mensajesVacio">
+            <div class="mensajes-vacio-icono">
+              <i class="fas fa-comments"></i>
+            </div>
+            <h3>Selecciona una conversación</h3>
+            <p>Elige una conversación de la lista para ver los mensajes</p>
+          </div>
+
+          <div class="mensajes-contenido" id="mensajesContenido" style="display: none;">
+            <!-- Encabezado de la conversación -->
+            <div class="mensajes-header-conversacion" id="headerConversacion">
+              <!-- Se llena dinámicamente -->
+            </div>
+
+            <!-- Área de mensajes -->
+            <div class="mensajes-area" id="areaMensajes">
+              <!-- Se llenan dinámicamente -->
+            </div>
+
+            <!-- Editor de mensajes -->
+            <div class="mensajes-editor">
+              <div class="editor-herramientas">
+                <button class="btn-herramienta" title="Adjuntar archivo">
+                  <i class="fas fa-paperclip"></i>
+                </button>
+                <button class="btn-herramienta" title="Emojis">
+                  <i class="fas fa-smile"></i>
+                </button>
+                <button class="btn-herramienta" title="Formato">
+                  <i class="fas fa-bold"></i>
+                </button>
+              </div>
+              <textarea 
+                id="editorMensaje" 
+                placeholder="Escribe tu mensaje..." 
+                rows="3"
+              ></textarea>
+              <button class="btn-enviar" onclick="enviarMensaje()">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal para Nuevo Mensaje -->
+  <div id="modalNuevoMensaje" class="modal-overlay">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h3>Nuevo Mensaje</h3>
+        <button class="btn-cerrar-modal" onclick="cerrarModalNuevoMensaje()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <form id="formNuevoMensaje" class="form-mensaje" onsubmit="return false;">
+        <div class="form-group">
+          <label for="destinatarioMensaje">Destinatario</label>
+          <select id="destinatarioMensaje" required>
+            <option value="">Seleccionar destinatario...</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="asuntoMensaje">Asunto</label>
+          <input type="text" id="asuntoMensaje" placeholder="Asunto del mensaje..." required>
+        </div>
+        
+        <div class="form-group">
+          <label for="contenidoMensaje">Mensaje</label>
+          <textarea id="contenidoMensaje" rows="6" placeholder="Escribe tu mensaje..." required></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" onclick="cerrarModalNuevoMensaje()">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-primary" onclick="enviarNuevoMensaje()">
+            <i class="fas fa-paper-plane"></i> Enviar Mensaje
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT INLINE -->
+  <script>
+    // ==========================================
+    // SISTEMA DE MENSAJERÍA - NEXUS PRO
+    // ==========================================
+
+    const conversacionesData = [
+      {
+        id: 1,
+        nombre: "Demo Cliente",
+        avatar: "D",
+        tipo: "cliente",
+        ultimoMensaje: "Tenemos 15 equipos que requieren mantenimiento. ¿P...",
+        tiempo: "20:49",
+        noLeido: 2,
+        estado: "online",
+        mensajes: [
+          { id: 1, autor: "Demo Cliente", avatar: "D", texto: "Hola, tengo interés en el servicio de mantenimiento preventivo para nuestras computadoras. ¿Podrían enviarme más información?", tiempo: "18:49", enviado: false },
+          { id: 2, autor: "Tú", avatar: "IC", texto: "¡Hola! Claro que sí. El servicio de mantenimiento preventivo incluye limpieza interna, optimización del sistema y revisión de componentes. ¿Cuántas computadoras necesitan mantenimiento?", tiempo: "19:49", enviado: true, entregado: true },
+          { id: 3, autor: "Demo Cliente", avatar: "D", texto: "Tenemos 15 equipos que requieren mantenimiento. ¿Podrían enviarme una cotización?", tiempo: "20:49", enviado: false }
+        ]
+      },
+      {
+        id: 2,
+        nombre: "Equipo Técnico",
+        avatar: "ET",
+        tipo: "equipo",
+        ultimoMensaje: "Excelente trabajo, Carlos. ¿Podrías documentar la...",
+        tiempo: "18:49",
+        noLeido: 0,
+        estado: "online",
+        mensajes: [
+          { id: 1, autor: "Carlos Pérez", avatar: "CP", texto: "He completado la instalación del servidor. Todo funcionando correctamente.", tiempo: "17:30", enviado: false },
+          { id: 2, autor: "Tú", avatar: "IC", texto: "Excelente trabajo, Carlos. ¿Podrías documentar las configuraciones realizadas?", tiempo: "18:49", enviado: true, entregado: true }
+        ]
+      },
+      {
+        id: 3,
+        nombre: "TechSolutions Inc",
+        avatar: "TS",
+        tipo: "cliente",
+        ultimoMensaje: "Perfecto, quedamos así. Muchas gracias...",
+        tiempo: "Ayer",
+        noLeido: 0,
+        estado: "away",
+        mensajes: [
+          { id: 1, autor: "TechSolutions Inc", avatar: "TS", texto: "Buenos días, quisiera solicitar una cotización para 20 licencias de software.", tiempo: "10:15", enviado: false },
+          { id: 2, autor: "Tú", avatar: "IC", texto: "Buenos días. Con gusto. ¿Qué tipo de software necesitan?", tiempo: "10:30", enviado: true, entregado: true },
+          { id: 3, autor: "TechSolutions Inc", avatar: "TS", texto: "Necesitamos Office 365 Business Standard.", tiempo: "10:45", enviado: false },
+          { id: 4, autor: "Tú", avatar: "IC", texto: "Perfecto, les enviaré la cotización en breve.", tiempo: "11:00", enviado: true, entregado: true }
+        ]
+      },
+      {
+        id: 4,
+        nombre: "María Sánchez",
+        avatar: "MS",
+        tipo: "equipo",
+        ultimoMensaje: "Ok, revisaré los diseños y te comento.",
+        tiempo: "Hace 2 días",
+        noLeido: 0,
+        estado: "offline",
+        mensajes: [
+          { id: 1, autor: "Tú", avatar: "IC", texto: "María, ¿cómo va el diseño del nuevo proyecto?", tiempo: "14:20", enviado: true, entregado: true },
+          { id: 2, autor: "María Sánchez", avatar: "MS", texto: "Ok, revisaré los diseños y te comento.", tiempo: "15:30", enviado: false }
+        ]
+      }
+    ];
+
+    let conversacionActual = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      cargarConversaciones();
+      inicializarEventos();
+    });
+
+    function cargarConversaciones() {
+      const listaConversaciones = document.getElementById('listaConversaciones');
+      listaConversaciones.innerHTML = '';
+
+      conversacionesData.forEach(conv => {
+        const item = document.createElement('div');
+        item.className = 'conversacion-item';
+        if (conv.noLeido > 0) item.classList.add('no-leida');
+        
+        item.innerHTML = `
+          <div class="conversacion-avatar">
+            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(conv.nombre)}&background=3498DB&color=fff&bold=true" alt="${conv.nombre}">
+            <div class="status-dot ${conv.estado}"></div>
+          </div>
+          <div class="conversacion-info">
+            <div class="conversacion-top">
+              <span class="conversacion-nombre">${conv.nombre}</span>
+              <span class="conversacion-tiempo">${conv.tiempo}</span>
+            </div>
+            <div class="conversacion-preview">${conv.ultimoMensaje}</div>
+          </div>
+          ${conv.noLeido > 0 ? `<span class="badge-no-leido">${conv.noLeido}</span>` : ''}
+        `;
+
+        item.addEventListener('click', () => abrirConversacion(conv.id));
+        listaConversaciones.appendChild(item);
+      });
+    }
+
+    function abrirConversacion(id) {
+      const conversacion = conversacionesData.find(c => c.id === id);
+      if (!conversacion) return;
+
+      conversacionActual = conversacion;
+      conversacion.noLeido = 0;
+
+      document.querySelectorAll('.conversacion-item').forEach((item, index) => {
+        item.classList.remove('active');
+        if (index === conversacionesData.indexOf(conversacion)) {
+          item.classList.add('active');
+        }
+      });
+
+      document.getElementById('mensajesVacio').style.display = 'none';
+      document.getElementById('mensajesContenido').style.display = 'flex';
+
+      cargarHeaderConversacion(conversacion);
+      cargarMensajes(conversacion);
+      actualizarBadges();
+    }
+
+    function cargarHeaderConversacion(conv) {
+      const header = document.getElementById('headerConversacion');
+      const estadoTexto = conv.estado === 'online' ? 'En línea' : conv.estado === 'away' ? 'Ausente' : 'Desconectado';
+      const estadoColor = conv.estado === 'online' ? 'var(--turquesa)' : conv.estado === 'away' ? 'var(--amarillo)' : 'var(--text-tertiary)';
+
+      header.innerHTML = `
+        <div class="header-conversacion-avatar">
+          <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(conv.nombre)}&background=3498DB&color=fff&bold=true" alt="${conv.nombre}">
+        </div>
+        <div class="header-conversacion-info">
+          <div class="header-conversacion-nombre">${conv.nombre}</div>
+          <div class="header-conversacion-estado">
+            <i class="fas fa-circle" style="color: ${estadoColor}; font-size: 8px;"></i>
+            ${estadoTexto}
+          </div>
+        </div>
+        <div class="header-conversacion-acciones">
+          <button class="btn-header" title="Buscar">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="btn-header" title="Más opciones">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+        </div>
+      `;
+    }
+
+    function cargarMensajes(conv) {
+      const areaMensajes = document.getElementById('areaMensajes');
+      areaMensajes.innerHTML = '<div class="fecha-separador"><span>27 de noviembre de 2025</span></div>';
+
+      conv.mensajes.forEach(msg => {
+        const mensajeDiv = document.createElement('div');
+        mensajeDiv.className = `mensaje ${msg.enviado ? 'enviado' : 'recibido'}`;
+        
+        let estadoHTML = msg.enviado && msg.entregado ? '<div class="mensaje-estado entregado"><i class="fas fa-check-double"></i></div>' : '';
+
+        mensajeDiv.innerHTML = `
+          <div class="mensaje-avatar">${msg.avatar}</div>
+          <div class="mensaje-contenido">
+            <div class="mensaje-header">
+              <span class="mensaje-autor">${msg.autor}</span>
+              <span class="mensaje-tiempo">${msg.tiempo}</span>
+            </div>
+            <div class="mensaje-texto">${msg.texto}</div>
+            ${estadoHTML}
+          </div>
+        `;
+
+        areaMensajes.appendChild(mensajeDiv);
+      });
+
+      areaMensajes.scrollTop = areaMensajes.scrollHeight;
+    }
+
+    function enviarMensaje() {
+      const textarea = document.getElementById('editorMensaje');
+      const texto = textarea.value.trim();
+
+      if (!texto || !conversacionActual) return;
+
+      const nuevoMensaje = {
+        id: conversacionActual.mensajes.length + 1,
+        autor: "Tú",
+        avatar: "IC",
+        texto: texto,
+        tiempo: new Date().toLocaleTimeString('es', {hour: '2-digit', minute:'2-digit'}),
+        enviado: true,
+        entregado: true
+      };
+
+      conversacionActual.mensajes.push(nuevoMensaje);
+      conversacionActual.ultimoMensaje = texto.substring(0, 50) + '...';
+      conversacionActual.tiempo = "Ahora";
+
+      cargarMensajes(conversacionActual);
+      cargarConversaciones();
+      textarea.value = '';
+
+      setTimeout(() => simularRespuesta(), 2000);
+    }
+
+    function simularRespuesta() {
+      if (!conversacionActual) return;
+
+      const respuestas = ["Entendido, muchas gracias.", "Perfecto, me parece bien.", "Ok, revisaré y te comento."];
+      const respuestaAleatoria = respuestas[Math.floor(Math.random() * respuestas.length)];
+
+      const mensajeRespuesta = {
+        id: conversacionActual.mensajes.length + 1,
+        autor: conversacionActual.nombre,
+        avatar: conversacionActual.avatar,
+        texto: respuestaAleatoria,
+        tiempo: new Date().toLocaleTimeString('es', {hour: '2-digit', minute:'2-digit'}),
+        enviado: false
+      };
+
+      conversacionActual.mensajes.push(mensajeRespuesta);
+      conversacionActual.ultimoMensaje = respuestaAleatoria.substring(0, 50) + '...';
+      conversacionActual.noLeido = 1;
+
+      cargarMensajes(conversacionActual);
+      cargarConversaciones();
+      actualizarBadges();
+    }
+
+    function actualizarBadges() {
+      const totalNoLeidos = conversacionesData.reduce((sum, conv) => sum + conv.noLeido, 0);
+      document.getElementById('navBadgeMensajes').textContent = totalNoLeidos;
+    }
+
+    function inicializarEventos() {
+      const textarea = document.getElementById('editorMensaje');
+      textarea.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          enviarMensaje();
+        }
+      });
+
+      textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+      });
+    }
+
+    function filtrarConversaciones() {
+      const filtro = document.getElementById('filtroConversaciones').value;
+      const filtradas = conversacionesData.filter(conv => {
+        if (filtro === 'todas') return true;
+        if (filtro === 'no-leidas') return conv.noLeido > 0;
+        if (filtro === 'clientes') return conv.tipo === 'cliente';
+        if (filtro === 'equipo') return conv.tipo === 'equipo';
+        return true;
+      });
+
+      const listaConversaciones = document.getElementById('listaConversaciones');
+      listaConversaciones.innerHTML = '';
+
+      filtradas.forEach(conv => {
+        const item = document.createElement('div');
+        item.className = 'conversacion-item';
+        if (conv.noLeido > 0) item.classList.add('no-leida');
+        
+        item.innerHTML = `
+          <div class="conversacion-avatar">
+            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(conv.nombre)}&background=3498DB&color=fff&bold=true" alt="${conv.nombre}">
+            <div class="status-dot ${conv.estado}"></div>
+          </div>
+          <div class="conversacion-info">
+            <div class="conversacion-top">
+              <span class="conversacion-nombre">${conv.nombre}</span>
+              <span class="conversacion-tiempo">${conv.tiempo}</span>
+            </div>
+            <div class="conversacion-preview">${conv.ultimoMensaje}</div>
+          </div>
+          ${conv.noLeido > 0 ? `<span class="badge-no-leido">${conv.noLeido}</span>` : ''}
+        `;
+
+        item.addEventListener('click', () => abrirConversacion(conv.id));
+        listaConversaciones.appendChild(item);
+      });
+    }
+
+    function marcarTodosComoLeidos() {
+      conversacionesData.forEach(conv => conv.noLeido = 0);
+      cargarConversaciones();
+      actualizarBadges();
+    }
+
+    function abrirModalNuevoMensaje() {
+      const modal = document.getElementById('modalNuevoMensaje');
+      modal.classList.add('active');
+
+      const select = document.getElementById('destinatarioMensaje');
+      select.innerHTML = '<option value="">Seleccionar destinatario...</option>';
+      
+      conversacionesData.forEach(conv => {
+        const option = document.createElement('option');
+        option.value = conv.id;
+        option.textContent = conv.nombre;
+        select.appendChild(option);
+      });
+    }
+
+    function cerrarModalNuevoMensaje() {
+      document.getElementById('modalNuevoMensaje').classList.remove('active');
+      document.getElementById('formNuevoMensaje').reset();
+    }
+
+    function enviarNuevoMensaje() {
+      alert('Mensaje enviado - Funcionalidad en desarrollo');
+      cerrarModalNuevoMensaje();
+    }
+
+    document.getElementById('modalNuevoMensaje')?.addEventListener('click', function(e) {
+      if (e.target === this) cerrarModalNuevoMensaje();
+    });
+
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('active');
+    }
+
+    function toggleNotifications() {
+      alert('Notificaciones - En desarrollo');
+    }
+
+    function logout() {
+      if (confirm('¿Cerrar sesión?')) {
+        window.location.href = 'login.html';
+      }
+    }
+
+    function irAlInicio() {
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>

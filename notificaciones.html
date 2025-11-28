@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Notificaciones — Nexus Pro</title>
+  <link rel="stylesheet" href="css/notificaciones.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header" onclick="irAlInicio()" title="Ir al Inicio">
+      <div class="sidebar-logo">
+        <i class="fas fa-cube"></i>
+      </div>
+      <div class="sidebar-title">
+        <h2>Nexus Pro</h2>
+        <p>v.0.2.34</p>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <img src="https://ui-avatars.com/api/?name=Ivan+Coronado&background=22CA95&color=fff&bold=true" 
+           alt="Usuario" class="user-avatar-sidebar">
+      <div class="user-info-sidebar">
+        <h3 id="sidebarUserName">Ivan Coronado</h3>
+        <p id="sidebarUserRole">Administrador</p>
+      </div>
+      <div class="add-btn" title="Nueva notificación" onclick="crearNotificacionManual()">
+        <i class="fas fa-plus"></i>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">MÓDULOS</div>
+      <a href="dashboard.html" class="nav-item">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="clientes.html" class="nav-item">
+        <i class="fas fa-users"></i>
+        <span>Clientes</span>
+        <span class="nav-badge" id="navBadgeClientes">24</span>
+      </a>
+      <a href="servicios.html" class="nav-item">
+        <i class="fas fa-cogs"></i>
+        <span>Servicios</span>
+        <span class="nav-badge" id="navBadgeServicios">15</span>
+      </a>
+      <a href="cotizaciones.html" class="nav-item">
+        <i class="fas fa-file-contract"></i>
+        <span>Cotizaciones</span>
+        <span class="nav-badge" id="navBadgeCotizaciones">32</span>
+      </a>
+      <a href="facturacion.html" class="nav-item">
+        <i class="fas fa-file-invoice"></i>
+        <span>Facturación</span>
+      </a>
+      <a href="calendario.html" class="nav-item">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Calendario</span>
+      </a>
+      <a href="mensajes.html" class="nav-item">
+        <i class="fas fa-envelope"></i>
+        <span>Mensajes</span>
+        <span class="nav-badge" id="navBadgeMensajes">5</span>
+      </a>
+      <a href="notificaciones.html" class="nav-item active">
+        <i class="fas fa-bell"></i>
+        <span>Notificaciones</span>
+        <span class="nav-badge" id="navBadgeNotificaciones">8</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="version-info">
+        <div class="version-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <div class="version-text">
+          <h4>NexusCaster</h4>
+          <p>ver. 0.2.34</p>
+        </div>
+        <button class="version-menu">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-wrapper">
+    <header class="content-topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar notificaciones..." id="searchInput" oninput="buscarNotificaciones()">
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="topbar-actions">
+          <button class="action-btn" title="Notificaciones">
+            <i class="fas fa-bell"></i>
+            <span class="action-badge" id="topBadgeNotif">8</span>
+          </button>
+          <button class="action-btn" title="Mensajes" onclick="window.location.href='mensajes.html'">
+            <i class="fas fa-envelope"></i>
+            <span class="action-badge">5</span>
+          </button>
+          <button class="action-btn" title="Configuración" onclick="window.location.href='settings.html'">
+            <i class="fas fa-cog"></i>
+          </button>
+        </div>
+        
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Contenido de Notificaciones -->
+    <div class="notificaciones-container">
+      <div class="notificaciones-header">
+        <div class="notificaciones-title">
+          <h1>Centro de Notificaciones</h1>
+          <p>Gestiona tus alertas y recordatorios del sistema • <span id="contadorTotal">8 notificaciones</span></p>
+        </div>
+        
+        <div class="notificaciones-controls">
+          <button class="btn btn-secondary" onclick="marcarTodasComoLeidas()">
+            <i class="fas fa-check-double"></i>
+            Marcar todas como leídas
+          </button>
+          <button class="btn btn-secondary" onclick="eliminarTodasNotificaciones()">
+            <i class="fas fa-trash"></i>
+            Eliminar todas
+          </button>
+          <button class="btn btn-primary" onclick="abrirModalConfiguracion()">
+            <i class="fas fa-cog"></i>
+            Configurar
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtros -->
+      <div class="notificaciones-filtros">
+        <div class="filtro-grupo">
+          <label for="filtroTipo">Tipo de notificación</label>
+          <select id="filtroTipo" onchange="filtrarNotificaciones()">
+            <option value="todas">Todas las notificaciones</option>
+            <option value="sistema">Sistema</option>
+            <option value="cliente">Clientes</option>
+            <option value="cotizacion">Cotizaciones</option>
+            <option value="calendario">Calendario</option>
+            <option value="urgente">Urgentes</option>
+          </select>
+        </div>
+        
+        <div class="filtro-grupo">
+          <label for="filtroEstado">Estado</label>
+          <select id="filtroEstado" onchange="filtrarNotificaciones()">
+            <option value="todas">Todas</option>
+            <option value="no-leidas">No leídas</option>
+            <option value="leidas">Leídas</option>
+          </select>
+        </div>
+        
+        <div class="filtro-grupo">
+          <label for="filtroFecha">Período</label>
+          <select id="filtroFecha" onchange="filtrarNotificaciones()">
+            <option value="todas">Todas las fechas</option>
+            <option value="hoy">Hoy</option>
+            <option value="semana">Esta semana</option>
+            <option value="mes">Este mes</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Lista de Notificaciones -->
+      <div class="notificaciones-lista" id="listaNotificaciones">
+        <!-- Se cargan dinámicamente -->
+      </div>
+
+      <!-- Estado vacío -->
+      <div class="estado-vacio" id="estadoVacio" style="display: none;">
+        <div class="estado-icono">
+          <i class="fas fa-bell-slash"></i>
+        </div>
+        <h3>No hay notificaciones</h3>
+        <p>Cuando recibas notificaciones, aparecerán aquí</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal de Configuración -->
+  <div id="modalConfiguracion" class="modal-overlay">
+    <div class="modal-contenido modal-grande">
+      <div class="modal-header">
+        <h3>Configuración de Notificaciones</h3>
+        <button class="btn-cerrar-modal" onclick="cerrarModalConfiguracion()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="configuracion-contenido">
+        <div class="configuracion-seccion">
+          <h4>Preferencias de Notificación</h4>
+          
+          <div class="configuracion-opcion">
+            <div class="opcion-info">
+              <h5>Notificaciones por Email</h5>
+              <p>Recibir notificaciones importantes por correo electrónico</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="notificacionesEmail" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="configuracion-opcion">
+            <div class="opcion-info">
+              <h5>Notificaciones Push</h5>
+              <p>Mostrar notificaciones en tiempo real en el navegador</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="notificacionesPush" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="configuracion-opcion">
+            <div class="opcion-info">
+              <h5>Sonido de Notificaciones</h5>
+              <p>Reproducir sonido al recibir nuevas notificaciones</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="notificacionesSonido">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="configuracion-seccion">
+          <h4>Tipos de Notificaciones</h4>
+          
+          <div class="configuracion-opcion">
+            <div class="opcion-info">
+              <h5>Nuevos Clientes</h5>
+              <p>Notificarme cuando se registre un nuevo cliente</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="notifNuevosClientes" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="configuracion-opcion">
+            <div class="opcion-info">
+              <h5>Cotizaciones Pendientes</h5>
+              <p>Alertas sobre cotizaciones que requieren atención</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="notifCotizaciones" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="configuracion-opcion">
+            <div class="opcion-info">
+              <h5>Eventos del Calendario</h5>
+              <p>Recordatorios de citas y eventos programados</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="notifEventos" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="configuracion-opcion">
+            <div class="opcion-info">
+              <h5>Actualizaciones del Sistema</h5>
+              <p>Información sobre mantenimiento y nuevas características</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="notifSistema" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="configuracion-actions">
+          <button class="btn btn-ghost" onclick="cerrarModalConfiguracion()">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" onclick="guardarConfiguracion()">
+            <i class="fas fa-save"></i> Guardar Configuración
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT INLINE -->
+  <script>
+    // ==========================================
+    // SISTEMA DE NOTIFICACIONES - NEXUS PRO
+    // ==========================================
+
+    const notificacionesData = [
+      {
+        id: 1,
+        tipo: 'urgente',
+        titulo: 'Cotización pendiente de aprobación',
+        descripcion: 'La cotización #COT-2025-045 para TechSolutions Inc requiere tu aprobación urgente. Valor: $15,450',
+        tiempo: 'Hace 5 minutos',
+        leida: false,
+        icono: 'fa-exclamation-triangle',
+        acciones: [
+          { texto: 'Revisar', accion: 'revisarCotizacion', tipo: 'primary' },
+          { texto: 'Aprobar', accion: 'aprobarCotizacion', tipo: 'primary' }
+        ]
+      },
+      {
+        id: 2,
+        tipo: 'cliente',
+        titulo: 'Nuevo cliente registrado',
+        descripcion: 'GlobalTech Corp se ha registrado en la plataforma. Requiere asignación de ejecutivo de cuenta.',
+        tiempo: 'Hace 15 minutos',
+        leida: false,
+        icono: 'fa-user-plus',
+        acciones: [
+          { texto: 'Ver perfil', accion: 'verCliente', tipo: 'primary' }
+        ]
+      },
+      {
+        id: 3,
+        tipo: 'calendario',
+        titulo: 'Recordatorio: Reunión en 30 minutos',
+        descripcion: 'Reunión de seguimiento con Demo Cliente programada a las 15:00. Ubicación: Sala de conferencias virtual.',
+        tiempo: 'Hace 20 minutos',
+        leida: false,
+        icono: 'fa-calendar-check',
+        acciones: [
+          { texto: 'Unirse ahora', accion: 'unirseReunion', tipo: 'primary' },
+          { texto: 'Ver detalles', accion: 'verEvento', tipo: 'secondary' }
+        ]
+      },
+      {
+        id: 4,
+        tipo: 'sistema',
+        titulo: 'Actualización del sistema disponible',
+        descripcion: 'Nexus Pro v.0.3.0 está disponible con nuevas funcionalidades de reportes y mejoras de rendimiento.',
+        tiempo: 'Hace 1 hora',
+        leida: false,
+        icono: 'fa-sync-alt',
+        acciones: [
+          { texto: 'Ver cambios', accion: 'verActualizacion', tipo: 'secondary' }
+        ]
+      },
+      {
+        id: 5,
+        tipo: 'cotizacion',
+        titulo: 'Cotización aceptada',
+        descripcion: 'TechSolutions Inc ha aceptado la cotización #COT-2025-042 por $8,500. Proceder con la orden de servicio.',
+        tiempo: 'Hace 2 horas',
+        leida: true,
+        icono: 'fa-check-circle',
+        acciones: [
+          { texto: 'Crear orden', accion: 'crearOrden', tipo: 'primary' }
+        ]
+      },
+      {
+        id: 6,
+        tipo: 'cliente',
+        titulo: 'Solicitud de soporte técnico',
+        descripcion: 'Demo Cliente ha reportado un problema con el sistema de facturación. Prioridad: Media.',
+        tiempo: 'Hace 3 horas',
+        leida: true,
+        icono: 'fa-headset',
+        acciones: [
+          { texto: 'Atender', accion: 'atenderSoporte', tipo: 'primary' }
+        ]
+      },
+      {
+        id: 7,
+        tipo: 'calendario',
+        titulo: 'Evento completado',
+        descripcion: 'La reunión de planificación trimestral ha finalizado. Actas disponibles en el sistema.',
+        tiempo: 'Hace 5 horas',
+        leida: true,
+        icono: 'fa-calendar-check',
+        acciones: [
+          { texto: 'Ver actas', accion: 'verActas', tipo: 'secondary' }
+        ]
+      },
+      {
+        id: 8,
+        tipo: 'sistema',
+        titulo: 'Respaldo automático completado',
+        descripcion: 'El respaldo automático de datos se completó exitosamente. Última copia: 27/Nov/2025 08:00.',
+        tiempo: 'Hace 6 horas',
+        leida: true,
+        icono: 'fa-database',
+        acciones: []
+      }
+    ];
+
+    let notificacionesFiltradas = [...notificacionesData];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      cargarNotificaciones();
+      actualizarContadores();
+    });
+
+    function cargarNotificaciones() {
+      const lista = document.getElementById('listaNotificaciones');
+      const estadoVacio = document.getElementById('estadoVacio');
+
+      if (notificacionesFiltradas.length === 0) {
+        lista.style.display = 'none';
+        estadoVacio.style.display = 'block';
+        return;
+      }
+
+      lista.style.display = 'flex';
+      estadoVacio.style.display = 'none';
+      lista.innerHTML = '';
+
+      notificacionesFiltradas.forEach(notif => {
+        const item = document.createElement('div');
+        item.className = `notificacion-item ${notif.leida ? 'leida' : 'no-leida'}`;
+        item.onclick = () => marcarComoLeida(notif.id);
+
+        const accionesHTML = notif.acciones.map(accion => 
+          `<button class="btn-accion btn-accion-${accion.tipo}" onclick="event.stopPropagation(); ejecutarAccion('${accion.accion}', ${notif.id})">${accion.texto}</button>`
+        ).join('');
+
+        item.innerHTML = `
+          <div class="notificacion-icono ${notif.tipo}">
+            <i class="fas ${notif.icono}"></i>
+          </div>
+          <div class="notificacion-contenido">
+            <div class="notificacion-header">
+              <div class="notificacion-titulo">${notif.titulo}</div>
+              <div class="notificacion-tiempo">
+                <i class="far fa-clock"></i> ${notif.tiempo}
+              </div>
+            </div>
+            <div class="notificacion-descripcion">${notif.descripcion}</div>
+            ${accionesHTML ? `<div class="notificacion-acciones">${accionesHTML}</div>` : ''}
+            <span class="notificacion-badge badge-${notif.tipo}">${obtenerTextoTipo(notif.tipo)}</span>
+          </div>
+        `;
+
+        lista.appendChild(item);
+      });
+    }
+
+    function obtenerTextoTipo(tipo) {
+      const tipos = {
+        'urgente': 'Urgente',
+        'cliente': 'Cliente',
+        'sistema': 'Sistema',
+        'cotizacion': 'Cotización',
+        'calendario': 'Calendario'
+      };
+      return tipos[tipo] || tipo;
+    }
+
+    function marcarComoLeida(id) {
+      const notif = notificacionesData.find(n => n.id === id);
+      if (notif && !notif.leida) {
+        notif.leida = true;
+        filtrarNotificaciones();
+        actualizarContadores();
+      }
+    }
+
+    function marcarTodasComoLeidas() {
+      notificacionesData.forEach(n => n.leida = true);
+      filtrarNotificaciones();
+      actualizarContadores();
+    }
+
+    function eliminarTodasNotificaciones() {
+      if (confirm('¿Estás seguro de eliminar todas las notificaciones? Esta acción no se puede deshacer.')) {
+        notificacionesData.length = 0;
+        filtrarNotificaciones();
+        actualizarContadores();
+      }
+    }
+
+    function filtrarNotificaciones() {
+      const filtroTipo = document.getElementById('filtroTipo').value;
+      const filtroEstado = document.getElementById('filtroEstado').value;
+      const filtroFecha = document.getElementById('filtroFecha').value;
+
+      notificacionesFiltradas = notificacionesData.filter(notif => {
+        let cumpleTipo = filtroTipo === 'todas' || notif.tipo === filtroTipo;
+        let cumpleEstado = filtroEstado === 'todas' || 
+                          (filtroEstado === 'no-leidas' && !notif.leida) ||
+                          (filtroEstado === 'leidas' && notif.leida);
+        return cumpleTipo && cumpleEstado;
+      });
+
+      cargarNotificaciones();
+      actualizarContadores();
+    }
+
+    function buscarNotificaciones() {
+      const termino = document.getElementById('searchInput').value.toLowerCase();
+      
+      notificacionesFiltradas = notificacionesData.filter(notif => {
+        return notif.titulo.toLowerCase().includes(termino) ||
+               notif.descripcion.toLowerCase().includes(termino);
+      });
+
+      cargarNotificaciones();
+    }
+
+    function actualizarContadores() {
+      const noLeidas = notificacionesData.filter(n => !n.leida).length;
+      const total = notificacionesData.length;
+
+      document.getElementById('navBadgeNotificaciones').textContent = noLeidas;
+      document.getElementById('topBadgeNotif').textContent = noLeidas;
+      document.getElementById('contadorTotal').textContent = 
+        `${noLeidas} sin leer de ${total} notificaciones`;
+
+      // Ocultar badges si no hay notificaciones sin leer
+      if (noLeidas === 0) {
+        document.getElementById('topBadgeNotif').style.display = 'none';
+      } else {
+        document.getElementById('topBadgeNotif').style.display = 'flex';
+      }
+    }
+
+    function ejecutarAccion(accion, id) {
+      const acciones = {
+        'revisarCotizacion': () => window.location.href = `cotizaciones.html?id=${id}`,
+        'aprobarCotizacion': () => alert('Cotización aprobada exitosamente'),
+        'verCliente': () => window.location.href = `clientes.html?id=${id}`,
+        'unirseReunion': () => window.open('https://meet.google.com/', '_blank'),
+        'verEvento': () => window.location.href = `calendario.html?id=${id}`,
+        'verActualizacion': () => alert('Changelog de la actualización...'),
+        'crearOrden': () => alert('Creando orden de servicio...'),
+        'atenderSoporte': () => alert('Abriendo ticket de soporte...'),
+        'verActas': () => alert('Mostrando actas de la reunión...'),
+      };
+
+      if (acciones[accion]) {
+        acciones[accion]();
+      }
+    }
+
+    // Modal
+    function abrirModalConfiguracion() {
+      document.getElementById('modalConfiguracion').classList.add('active');
+    }
+
+    function cerrarModalConfiguracion() {
+      document.getElementById('modalConfiguracion').classList.remove('active');
+    }
+
+    function guardarConfiguracion() {
+      alert('Configuración guardada exitosamente');
+      cerrarModalConfiguracion();
+    }
+
+    document.getElementById('modalConfiguracion')?.addEventListener('click', function(e) {
+      if (e.target === this) cerrarModalConfiguracion();
+    });
+
+    // Funciones auxiliares
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('active');
+    }
+
+    function logout() {
+      if (confirm('¿Cerrar sesión?')) {
+        window.location.href = 'login.html';
+      }
+    }
+
+    function irAlInicio() {
+      window.location.href = 'dashboard.html';
+    }
+
+    function crearNotificacionManual() {
+      alert('Función de crear notificación manual - En desarrollo');
+    }
+
+    // Simular nueva notificación cada 30 segundos
+    setInterval(() => {
+      if (Math.random() > 0.7) {
+        const nuevaNotif = {
+          id: Date.now(),
+          tipo: ['sistema', 'cliente', 'cotizacion'][Math.floor(Math.random() * 3)],
+          titulo: 'Nueva notificación del sistema',
+          descripcion: 'Esta es una notificación de prueba generada automáticamente.',
+          tiempo: 'Justo ahora',
+          leida: false,
+          icono: 'fa-bell',
+          acciones: []
+        };
+        notificacionesData.unshift(nuevaNotif);
+        filtrarNotificaciones();
+      }
+    }, 30000);
+  </script>
+</body>
+</html>
