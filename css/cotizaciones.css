@@ -63,7 +63,17 @@ body {
   border-right: 1px solid rgba(34, 202, 149, 0.1);
   overflow-y: auto;
   z-index: 1000;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--mountain-meadow), transparent);
 }
 
 .sidebar-header {
@@ -73,20 +83,46 @@ body {
   gap: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sidebar-header:hover {
+  transform: translateY(-2px);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-header:hover .sidebar-title h2 {
+  color: var(--mountain-meadow);
 }
 
 .sidebar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 45px;
   height: 45px;
   background: linear-gradient(135deg, var(--mountain-meadow), var(--caribbean-green));
   border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: white;
   font-size: 22px;
   box-shadow: 0 4px 12px rgba(34, 202, 149, 0.3);
   flex-shrink: 0;
+  transition: all 0.3s ease;
+  padding: 4px;
+}
+
+.sidebar-header:hover .sidebar-logo {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(34, 202, 149, 0.4);
+}
+
+.logo-sidebar {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 6px;
+  transition: all 0.3s ease;
 }
 
 .sidebar-title h2 {
@@ -94,6 +130,8 @@ body {
   font-weight: 700;
   color: var(--anti-flash-white);
   margin-bottom: 0.2rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .sidebar-title p {
@@ -124,6 +162,7 @@ body {
   border: 2px solid var(--mountain-meadow);
   object-fit: cover;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(34, 202, 149, 0.3);
 }
 
 .user-info-sidebar {
@@ -133,7 +172,7 @@ body {
 
 .user-info-sidebar h3 {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--anti-flash-white);
   margin-bottom: 0.2rem;
   white-space: nowrap;
@@ -143,7 +182,8 @@ body {
 
 .user-info-sidebar p {
   font-size: 12px;
-  color: var(--stone);
+  color: var(--mint);
+  font-weight: 500;
 }
 
 .add-btn {
@@ -173,12 +213,12 @@ body {
 
 .nav-section-title {
   padding: 0.5rem 1.5rem;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   text-transform: uppercase;
-  color: var(--stone);
-  letter-spacing: 1px;
-  margin-top: 0.5rem;
+  color: var(--mountain-meadow);
+  letter-spacing: 1.2px;
+  margin-top: 1rem;
 }
 
 .nav-item {
@@ -188,23 +228,25 @@ body {
   gap: 1rem;
   color: rgba(241, 242, 242, 0.7);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   text-decoration: none;
   border-left: 3px solid transparent;
 }
 
 .nav-item:hover {
-  background: rgba(34, 202, 149, 0.08);
+  background: rgba(34, 202, 149, 0.1);
   color: var(--anti-flash-white);
   border-left-color: var(--mountain-meadow);
+  transform: translateX(5px);
 }
 
 .nav-item.active {
-  background: var(--mountain-meadow);
+  background: linear-gradient(135deg, var(--mountain-meadow), var(--caribbean-green));
   color: white;
   font-weight: 600;
   border-left-color: var(--caribbean-green);
+  box-shadow: 0 4px 12px rgba(34, 202, 149, 0.3);
 }
 
 .nav-item i {
@@ -220,18 +262,22 @@ body {
 
 .nav-badge {
   margin-left: auto;
-  background: rgba(34, 202, 149, 0.2);
+  background: rgba(34, 202, 149, 0.3);
   color: var(--mint);
   padding: 0.2rem 0.6rem;
   border-radius: 10px;
   font-size: 11px;
-  font-weight: 700;
-  min-width: 24px;
+  font-weight: 800;
+  min-width: 26px;
+  height: 20px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-item.active .nav-badge {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
   color: white;
 }
 
@@ -239,6 +285,17 @@ body {
   padding: 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   background: rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.sidebar-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1.5rem;
+  right: 1.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34, 202, 149, 0.3), transparent);
 }
 
 .version-info {
@@ -246,15 +303,15 @@ body {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(34, 202, 149, 0.05);
-  border-radius: 10px;
-  border: 1px solid rgba(34, 202, 149, 0.1);
+  background: rgba(34, 202, 149, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(34, 202, 149, 0.15);
 }
 
 .version-icon {
   width: 40px;
   height: 40px;
-  background: var(--mountain-meadow);
+  background: linear-gradient(135deg, var(--mountain-meadow), var(--caribbean-green));
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -262,6 +319,7 @@ body {
   color: white;
   font-size: 18px;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(34, 202, 149, 0.3);
 }
 
 .version-text {
@@ -270,14 +328,15 @@ body {
 
 .version-text h4 {
   font-size: 13px;
-  font-weight: 600;
-  color: var(--anti-flash-white);
+  font-weight: 700;
+  color: var(--mint);
   margin-bottom: 0.2rem;
 }
 
 .version-text p {
   font-size: 11px;
   color: var(--stone);
+  font-weight: 500;
 }
 
 .version-menu {
@@ -305,6 +364,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   background: #1A1D21;
+  transition: margin-left 0.3s ease;
 }
 
 /* ==========================================
@@ -415,6 +475,7 @@ body {
 .action-btn:hover {
   background: rgba(34, 202, 149, 0.1);
   color: var(--mountain-meadow);
+  transform: translateY(-2px);
 }
 
 .action-badge {
@@ -527,6 +588,7 @@ body {
 .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: var(--mountain-meadow);
+  transform: translateY(-2px);
 }
 
 /* ==========================================
@@ -670,6 +732,11 @@ body {
   color: var(--anti-flash-white);
 }
 
+.section-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .options-btn {
   background: rgba(255, 255, 255, 0.05);
   border: none;
@@ -687,6 +754,7 @@ body {
 .options-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   color: var(--anti-flash-white);
+  transform: translateY(-2px);
 }
 
 /* Tabla de Cotizaciones */
@@ -892,6 +960,7 @@ body {
 @media (max-width: 1024px) {
   .sidebar {
     transform: translateX(-100%);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
   }
 
   .sidebar.active {
@@ -918,6 +987,22 @@ body {
 
   .content-topbar {
     padding: 0 1rem;
+  }
+
+  .sidebar {
+    width: 280px;
+  }
+  
+  .sidebar-header {
+    padding: 1.2rem;
+  }
+  
+  .sidebar-user {
+    padding: 0.8rem 1.2rem;
+  }
+  
+  .nav-item {
+    padding: 0.8rem 1.2rem;
   }
 
   .cotizaciones-header {
@@ -990,26 +1075,41 @@ body {
   }
 }
 
+/* Estilos para selects */
 select {
-    background-color: #111827 !important;
-    border: 1px solid #374151 !important;
-    color: #e5e7eb !important;
-    padding: 8px 12px;
-    border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: var(--anti-flash-white) !important;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  font-size: 14px;
 }
 
 select option {
-    background-color: #1f2937 !important;
-    color: #f3f4f6 !important;
-    padding: 8px;
+  background-color: var(--rich-black) !important;
+  color: var(--anti-flash-white) !important;
+  padding: 8px;
 }
 
 select option:hover {
-    background-color: #2563eb !important;
-    color: white !important;
+  background-color: var(--mountain-meadow) !important;
+  color: white !important;
 }
 
 select option:checked {
-    background-color: #2563eb !important;
-    color: white !important;
+  background-color: var(--mountain-meadow) !important;
+  color: white !important;
+}
+
+/* Ajustes responsivos para el logo */
+@media (max-width: 768px) {
+  .sidebar-logo {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .logo-sidebar {
+    width: 28px;
+    height: 28px;
+  }
 }
